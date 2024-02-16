@@ -1,9 +1,11 @@
-package management.environment;
+package inst.environment;
 
+
+import management.environment.BaseEnv;
 
 public class InstEnvironment extends BaseEnv {
 
-    private static InstEnvironment _instance = new InstEnvironment();
+    private static InstEnvironment environment = new InstEnvironment();
     private String imagesPath;
     private String tempTagsFilePath;
     private String cookieFilePath;
@@ -31,10 +33,10 @@ public class InstEnvironment extends BaseEnv {
     }
 
     public static InstEnvironment get() {
-        if (_instance == null) {
-            _instance = new InstEnvironment();
+        if (environment == null) {
+            environment = new InstEnvironment();
         }
-        return _instance;
+        return environment;
     }
 
     public String getImagesPath() {

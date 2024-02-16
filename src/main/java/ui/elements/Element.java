@@ -18,6 +18,7 @@ import java.util.function.BooleanSupplier;
 
 @Log4j2
 public class Element {
+
     public static final Duration defaultElementDuration = DefaultEnvironment.get().getElementTimeout();
     private String name;
     private BasePage page;
@@ -31,7 +32,8 @@ public class Element {
         this(name, context, loc, false);
     }
 
-    /**ElementHandle works faster than toLocator() if we use some actions in a row , but toLocator finds element*/
+    /** ElementHandle works faster than toLocator() if we use some actions in a row with 1 element,
+     *  .toLocator finds element for each action*/
     public Element(String name, IWebContext context, Loc loc, boolean handleInitialization) {
         this.name = name;
         this.context = context;
@@ -89,7 +91,7 @@ public class Element {
     }
 
     public boolean waitForVisible(Duration timeout) {
-        page.getPwPage().waitForSelector(loc.toString());
+        //page.getPwPage().waitForSelector(loc.toString());
         return waitForCondition(() -> getPWLoc().isVisible(), timeout);
     }
 

@@ -36,7 +36,7 @@ public class BrowserManager {
     private void initContext(){
         browser = browserType.launch(options);
 
-        Browser.NewContextOptions opt = new Browser.NewContextOptions().setViewportSize(null);
+        Browser.NewContextOptions opt = new Browser.NewContextOptions().setViewportSize(null).setLocale("en-GB");
         context = browser.newContext(opt);
     }
 
