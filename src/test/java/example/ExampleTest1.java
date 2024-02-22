@@ -8,7 +8,7 @@ import ui.pages.example.docs_pages.PwPagesPage;
 
 public class ExampleTest1 extends BaseExampleTest {
 
-    @Test
+    @Test(testName = "TestNName", description = "descr")
     public void test(){
 
         PwMainPage playwrightMainPage = new PwMainPage(browserManager.getBrowser().contexts().get(0));

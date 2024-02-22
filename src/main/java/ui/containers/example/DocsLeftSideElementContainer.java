@@ -1,13 +1,13 @@
-package ui.blocks.example;
+package ui.containers.example;
 
 import ui.IWebContext;
-import ui.blocks.BaseBlock;
+import ui.containers.BaseElementContainer;
 import ui.elements.Element;
 import ui.elements.locator.Loc;
 
-public class DocsLeftSideBlock extends BaseBlock {
+public class DocsLeftSideElementContainer extends BaseElementContainer {
 
-    public DocsLeftSideBlock(IWebContext parent) {
+    public DocsLeftSideElementContainer(IWebContext parent) {
         super("Left Menu", parent, Loc.css("nav[aria-label='Docs sidebar']"));
     }
 

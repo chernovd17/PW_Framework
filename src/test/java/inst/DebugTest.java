@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 
 public class DebugTest extends BaseInstTest {
 
-    @Test(testName = "Inst Example")
+    @Test(testName = "Inst Debugger Test", description = "Test for debugging system")
     public void test() {
 
         LoginPage loginPage = new LoginPage(getCurrentPwPage());

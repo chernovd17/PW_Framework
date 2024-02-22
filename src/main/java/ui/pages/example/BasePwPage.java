@@ -2,15 +2,14 @@ package ui.pages.example;
 
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
-import ui.blocks.example.PwHeaderBlock;
+import ui.containers.example.PwHeaderElementContainer;
 import ui.pages.BasePage;
-import ui.pages.example.docs_pages.BaseDocsPage;
 import ui.pages.example.docs_pages.PwInstallationPage;
 
 
 public abstract class BasePwPage extends BasePage {
 
-    private PwHeaderBlock pwHeaderBlock = new PwHeaderBlock(this);
+    private PwHeaderElementContainer pwHeaderBlock = new PwHeaderElementContainer(this);
 
     public BasePwPage(String name, BrowserContext context) {
         super(name, context);
@@ -29,6 +28,7 @@ public abstract class BasePwPage extends BasePage {
     }
 
     public GitHubRepositoryPage openGitHubRepository(){
+        STEP("OPEN GIT HUB REPOSITORY");
         return pwHeaderBlock.openGitHubRepository();
     }
 

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
-public class BaseInstTest {
+public class BaseInstTest extends BaseTest {
 
     protected BrowserManager browserManager;
 

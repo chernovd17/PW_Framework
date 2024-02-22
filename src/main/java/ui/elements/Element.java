@@ -1,5 +1,6 @@
 package ui.elements;
 
+import LOGGER.GlobalLoggerSession;
 import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
@@ -9,7 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import management.environment.DefaultEnvironment;
 import org.apache.logging.log4j.Logger;
 import ui.IWebContext;
-import ui.blocks.BaseBlock;
+import ui.containers.BaseElementContainer;
 import ui.elements.locator.Loc;
 import ui.pages.BasePage;
 
@@ -22,7 +23,7 @@ public class Element {
     public static final Duration defaultElementDuration = DefaultEnvironment.get().getElementTimeout();
     private String name;
     private BasePage page;
-    private BaseBlock parent;
+    private BaseElementContainer parent;
     private IWebContext context;
     private ElementHandle handle;
     private Loc loc;
@@ -33,12 +34,12 @@ public class Element {
     }
 
     /** ElementHandle works faster than toLocator() if we use some actions in a row with 1 element,
-     *  .toLocator finds element for each action*/
+     *  .toLocator() finds element for each action*/
     public Element(String name, IWebContext context, Loc loc, boolean handleInitialization) {
         this.name = name;
         this.context = context;
         this.page = context.getPage();
-        this.parent = context.getComponent();
+        this.parent = context.getContainer();
         this.loc = loc;
         this.pwLoc = getPWLoc();
         if(handleInitialization)
@@ -49,10 +50,11 @@ public class Element {
         if(parent == null)
             this.handle = page.getPwPage().querySelector(loc.toString());
         else
-            this.handle = parent.getComponentAsElement().getHandle().querySelector(loc.toString());
+            this.handle = parent.getContainerAsElement().getHandle().querySelector(loc.toString());
     }
 
     public void click() {
+        ACTION(String.format("Click '%s'", name));
         getLogger().info(String.format("Click '%s'", name));
         //DefaultHelper.sleep(Duration.ofSeconds(2));
         getPWLoc().click();
@@ -65,7 +67,9 @@ public class Element {
     }
 
     public void fillText(String text) {
-        getLogger().info(String.format("Fill Text '%s' in element '%s'", text, name));
+        //getLogger().info(String.format("Fill Text '%s' in element '%s'", text, name));
+        ACTION(String.format("Fill Text '%s' in element '%s'", text, name));
+
         getPWLoc().fill(text);
     }
 
@@ -75,6 +79,7 @@ public class Element {
     }
 
     public String getText() {
+        ACTION("Get text from Element '" + getLogicalName() + "'.");
         return getPWLoc().innerText();
     }
 
@@ -113,7 +118,7 @@ public class Element {
 
     protected Locator getPWLoc() {
         if(parent != null)
-            return parent.getComponentAsElement().getPWLoc().locator(loc.toString()).first();
+            return parent.getContainerAsElement().getPWLoc().locator(loc.toString()).first();
         else
             return page.getPwPage().locator(loc.toString()).first();//first() -- to ignore "Error: strict mode violation" when locator return more than 1 elements
     }
@@ -156,5 +161,10 @@ public class Element {
 
     public boolean waitForContainsText(String text) {
         return waitForCondition(() -> getPWLoc().innerText().contains(text), defaultElementDuration);
+    }
+
+    protected void ACTION(String info) {
+        log.info("ELEMENT: " + info);
+        GlobalLoggerSession.getSession().getTestLogger().action(info);
     }
 }

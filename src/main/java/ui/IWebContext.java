@@ -1,7 +1,8 @@
 package ui;
 
 import com.microsoft.playwright.Page;
-import ui.blocks.BaseBlock;
+import lombok.extern.log4j.Log4j2;
+import ui.containers.BaseElementContainer;
 import ui.pages.BasePage;
 
 import java.time.Duration;
@@ -20,5 +21,5 @@ public interface IWebContext {
 
     BasePage getPage();
 
-    BaseBlock getComponent();
+    BaseElementContainer getContainer();
 }

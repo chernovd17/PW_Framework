@@ -1,5 +1,6 @@
 package base_tests;
 
+import LOGGER.GlobalLoggerSession;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import lombok.extern.log4j.Log4j2;
@@ -7,9 +8,10 @@ import management.environment.DefaultEnvironment;
 import management.playwright.BrowserManager;
 import management.playwright.PlaywrightSession;
 import org.apache.logging.log4j.Logger;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
+import org.testng.ITestContext;
+import org.testng.annotations.*;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,4 +47,21 @@ public class BaseTest {
     protected Logger getLogger() {
         return log;
     }
+
+    @BeforeSuite(alwaysRun = true)
+    public synchronized void beforeSuite(ITestContext context) {
+        GlobalLoggerSession.initLoggerAndSuiteInfo(context);
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public void afterMethod(ITestContext context, Method method, Object[] params) {
+        GlobalLoggerSession.getSession().resetTestLoggerSession();
+    }
+
+    @BeforeMethod(alwaysRun = true)
+    public void beforeTest(ITestContext context, Method method, Object[] params) {
+        Test annotation = method.getAnnotation(Test.class);
+        GlobalLoggerSession.getSession().initTestLoggerSession(annotation);
+    }
+
 }

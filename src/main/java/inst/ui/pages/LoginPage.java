@@ -32,7 +32,6 @@ public class LoginPage extends BasePage {
     }
 
     public HomePage login(String login, String password){
-        getLogger().info("Login");
         userNameEdit.typeText(login);
         passwordEdit.typeText(password);
         loginBtn.click();

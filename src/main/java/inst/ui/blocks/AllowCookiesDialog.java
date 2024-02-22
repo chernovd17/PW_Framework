@@ -2,11 +2,11 @@ package inst.ui.blocks;
 
 import inst.ui.pages.LoginPage;
 import ui.IWebContext;
-import ui.blocks.BaseBlock;
+import ui.containers.BaseElementContainer;
 import ui.elements.Button;
 import ui.elements.locator.Loc;
 
-public class AllowCookiesDialog extends BaseBlock {
+public class AllowCookiesDialog extends BaseElementContainer {
 
     private final Button allowBtn = new Button("Allow Btn", this, Loc.xpath(".//button[text()='Allow all cookies']"));
 
