@@ -15,7 +15,6 @@ public class NotificationDialog extends BaseElementContainer {
     }
 
     public void clickNotNow(){
-        getLogger().info("Click Not Now");
         notNow.click();
     }
 

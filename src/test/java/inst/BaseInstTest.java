@@ -19,14 +19,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-@Log4j2
 public class BaseInstTest extends BaseTest {
 
     protected BrowserManager browserManager;
 
     @BeforeTest
     protected void launch() {
-        getLogger().info("Start");
+        getLogger().SYSTEM("Start");
         List<String> args = new ArrayList<>();
         args.add("--start-maximized");
         BrowserType.LaunchOptions type = new BrowserType.LaunchOptions()
@@ -41,14 +40,10 @@ public class BaseInstTest extends BaseTest {
     protected void closeAllSession() {
         browserManager.closeBrowser();
         PlaywrightSession.getInstance().close();
-        getLogger().info("Finish");
+        getLogger().SYSTEM("Finish");
     }
 
     protected Page getCurrentPwPage() {
         return browserManager.getBrowser().contexts().get(0).pages().get(0);
-    }
-
-    protected Logger getLogger() {
-        return log;
     }
 }

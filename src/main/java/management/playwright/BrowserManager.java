@@ -5,15 +5,18 @@ import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.Cookie;
+import lombok.Getter;
 import management.environment.DefaultEnvironment;
 
 import java.util.List;
 
 
 public class BrowserManager {
+    @Getter
     private Browser browser;
-    private BrowserType.LaunchOptions options;
-    private BrowserContext context;
+    private final BrowserType.LaunchOptions options;
+    @Getter
+    private BrowserContext context;//todo need to create as List -- it's useful for tests with 2+ windows
     private final BrowserType browserType;//?
 
     public BrowserManager(BrowserType browserType, BrowserType.LaunchOptions options) {
@@ -64,7 +67,7 @@ public class BrowserManager {
 
     public static BrowserManager createNew(String browserName, BrowserType.LaunchOptions launchOptions, List<Cookie> cookies) {
         BrowserType type = getPWBrowserTypeByName(browserName);
-        if(cookies.size() > 0)
+        if(!cookies.isEmpty())
             return new BrowserManager(type, launchOptions, cookies);
         else
             return new BrowserManager(type, launchOptions);
@@ -84,14 +87,6 @@ public class BrowserManager {
 
     public void closeBrowser() {
         browser.close();
-    }
-
-    public Browser getBrowser(){
-        return browser;
-    }
-
-    public BrowserContext getContext(){
-        return context;
     }
 
     public Page closeLastTab(){

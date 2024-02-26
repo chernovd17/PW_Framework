@@ -15,7 +15,7 @@ public class AllowCookiesDialog extends BaseElementContainer {
     }
 
     public LoginPage allowCookies(){
-        getLogger().info("Allow cookies");
+        STEP("Allow cookies");
         allowBtn.click();
         allowBtn.notVisible();
         return new LoginPage(getPwPage());

@@ -1,8 +1,7 @@
-package LOGGER.info;
+package LOGGER.entities;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.testng.ISuite;
 import org.testng.ITestContext;
 
 import java.time.LocalDateTime;

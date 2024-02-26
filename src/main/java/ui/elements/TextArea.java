@@ -15,7 +15,7 @@ public class TextArea extends Element {
     }
 
     public void setText(String text) {
-        getLogger().info("Set Text \n" + text + "\n");
+        ACTION("Set Text \n" + text + "\n");
         getPWLoc().fill(text);
     }
 

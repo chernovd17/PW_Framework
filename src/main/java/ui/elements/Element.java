@@ -1,14 +1,13 @@
 package ui.elements;
 
-import LOGGER.GlobalLoggerSession;
+import LOGGER.withlog4j2.GlobalLoggerSession;
+import LOGGER.entities.LogLevels;
 import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.TimeoutError;
 import com.microsoft.playwright.options.BoundingBox;
-import lombok.extern.log4j.Log4j2;
 import management.environment.DefaultEnvironment;
-import org.apache.logging.log4j.Logger;
 import ui.IWebContext;
 import ui.containers.BaseElementContainer;
 import ui.elements.locator.Loc;
@@ -17,7 +16,6 @@ import ui.pages.BasePage;
 import java.time.Duration;
 import java.util.function.BooleanSupplier;
 
-@Log4j2
 public class Element {
 
     public static final Duration defaultElementDuration = DefaultEnvironment.get().getElementTimeout();
@@ -55,13 +53,12 @@ public class Element {
 
     public void click() {
         ACTION(String.format("Click '%s'", name));
-        getLogger().info(String.format("Click '%s'", name));
         //DefaultHelper.sleep(Duration.ofSeconds(2));
         getPWLoc().click();
     }
 
     public void typeText(String text) {
-        getLogger().info(String.format("Type Text '%s' in element '%s'", text, name));
+        ACTION(String.format("Type Text '%s' in element '%s'", text, name));
         //DefaultHelper.sleep(Duration.ofSeconds(2));//
         getPWLoc().type(text);
     }
@@ -74,7 +71,7 @@ public class Element {
     }
 
     public void fillTextWithForce(String text) {
-        getLogger().info(String.format("Fill Text '%s' in element '%s'", text, name));
+        ACTION(String.format("Fill Text '%s' in element '%s'", text, name));
         getPWLoc().fill(text, new Locator.FillOptions().setForce(true));
     }
 
@@ -135,10 +132,6 @@ public class Element {
         }
     }
 
-    protected Logger getLogger() {
-        return log;
-    }
-
     public String getLogicalName() {
         return name;
     }
@@ -164,7 +157,6 @@ public class Element {
     }
 
     protected void ACTION(String info) {
-        log.info("ELEMENT: " + info);
-        GlobalLoggerSession.getSession().getTestLogger().action(info);
+        GlobalLoggerSession.getSession().getLogger().log(LogLevels.ACTION.getLevel(), info);
     }
 }

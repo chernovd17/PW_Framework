@@ -1,9 +1,6 @@
 package ui.containers;
 
-import LOGGER.GlobalLoggerSession;
 import com.microsoft.playwright.Page;
-import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.Logger;
 import ui.IWebContext;
 import ui.elements.Element;
 import ui.elements.locator.Loc;
@@ -11,7 +8,6 @@ import ui.pages.BasePage;
 
 import java.time.Duration;
 
-@Log4j2
 public abstract class BaseElementContainer implements IWebContext {
 
     private static final Duration defaultConteinerDuration = Duration.ofSeconds(15);
@@ -66,10 +62,6 @@ public abstract class BaseElementContainer implements IWebContext {
         return element;
     }
 
-    protected Logger getLogger() {
-        return log;
-    }
-
     public boolean visible() {
         return getContainer().getContainerAsElement().visible();
     }
@@ -78,7 +70,4 @@ public abstract class BaseElementContainer implements IWebContext {
         return !visible();
     }
 
-    protected void STEP(String info) {
-        GlobalLoggerSession.getSession().getTestLogger().step(info);
-    }
 }

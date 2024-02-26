@@ -1,6 +1,6 @@
 package example;
 
-import org.testng.Assert;
+import helpers.Validation;
 import org.testng.annotations.Test;
 import ui.pages.example.GitHubRepositoryPage;
 import ui.pages.example.PwMainPage;
@@ -14,17 +14,20 @@ public class ExampleTest2 extends BaseExampleTest {
     @Test
     public void test(){
 
-        PwMainPage playwrightMainPage = new PwMainPage(browserManager.getBrowser().contexts().get(0));
+        PwMainPage playwrightMainPage = new PwMainPage(browserManager.get().getBrowser().contexts().getFirst());
         playwrightMainPage.waitForOpening();
 
         GitHubRepositoryPage gitHubRepositoryPage = playwrightMainPage.openGitHubRepository();
 
         String actual = gitHubRepositoryPage.getLastVersion();
-        Assert.assertEquals(actual, EXPECTED_VERSION);
+        Validation.verifyTrue(actual.equals(EXPECTED_VERSION), "Verify if Version is as expected");
+        //Validation.verifyTrue(false, "just false");
 
-        gitHubRepositoryPage = new GitHubRepositoryPage(browserManager.closeLastTab());
+        gitHubRepositoryPage = new GitHubRepositoryPage(browserManager.get().closeLastTab());
         PwInstallationPage pwInstallationPage = gitHubRepositoryPage.openDocsPage();
 
         PwPagesPage pwPagesPage = pwInstallationPage.openPagesArticle();
+
+        generateTestFinalStatus();
     }
 }

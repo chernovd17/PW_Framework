@@ -1,19 +1,22 @@
 package management.environment.example;
 
 import management.environment.BaseEnv;
+import management.environment.DefaultEnvironment;
 
 import java.time.Duration;
 import java.util.Locale;
 
 public class ExampleEnvironment extends BaseEnv {
 
-    private static ExampleEnvironment env = new ExampleEnvironment();
+    private static ExampleEnvironment env;
 
     protected ExampleEnvironment() {
         super("/properties/test_example.properties");
     }
 
     public static ExampleEnvironment get() {
+        if(env == null)
+            env = new ExampleEnvironment();
         return env;
     }
 

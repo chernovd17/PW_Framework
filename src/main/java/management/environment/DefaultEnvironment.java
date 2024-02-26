@@ -5,13 +5,15 @@ import java.util.Locale;
 
 public class DefaultEnvironment extends BaseEnv {
 
-    private static DefaultEnvironment env = new DefaultEnvironment();
+    private static DefaultEnvironment env;
 
     protected DefaultEnvironment() {
         super("/properties/default.properties");
     }
 
     public static DefaultEnvironment get() {
+        if(env == null)
+            env = new DefaultEnvironment();
         return env;
     }
 

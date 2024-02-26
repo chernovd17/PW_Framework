@@ -1,17 +1,13 @@
 package ui.pages;
 
-import LOGGER.GlobalLoggerSession;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.Logger;
 import ui.IWebContext;
 import ui.containers.BaseElementContainer;
 
 import java.time.Duration;
 
-@Log4j2
 public abstract class BasePage implements IWebContext {
 
     private Duration pageDuration = Duration.ofSeconds(90);
@@ -52,8 +48,10 @@ public abstract class BasePage implements IWebContext {
         return null;
     }
 
-    protected void STEP(String info) {
-        GlobalLoggerSession.getSession().getTestLogger().step(info);
+    //todo: need to learn more about this feature and how it works
+    public Object evaluate(String expression){
+        return getPwPage().evaluate(expression);
+
     }
 
 }
