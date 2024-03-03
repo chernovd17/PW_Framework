@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="ParallelTestSuite" parallel="tests" thread-count="2">
-    <test name="Test1">
+    <test name="thread1">
         <classes>
             <class name="example.ExampleTest1"/>
         </classes>
     </test>
-    <test name="Test2">
+    <test name="thread2">
         <classes>
             <class name="example.ExampleTest2"/>
         </classes>

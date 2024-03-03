@@ -1,11 +1,15 @@
 package LOGGER.withlog4j2;
 
+import LOGGER.entities.SuiteInfo;
+import management.playwright.run_management.Sessions;
+import management.playwright.run_management.TestSession;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.LogEvent;
 
 import java.io.Serializable;
+
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
 import org.apache.logging.log4j.core.config.plugins.PluginElement;
@@ -30,8 +34,13 @@ public class CustomUIAppender extends AbstractAppender {
     }
 
     @Override
-    public void append(LogEvent event) {
-        GlobalLoggerSession.getSession().getTestLogger().addRow(event);
-        // Add code to display logMessage in your UI report
+    public synchronized void append(LogEvent event) {
+        TestSession currentSession = Sessions.getCurrentSession();
+        if(currentSession != null)
+            currentSession.getLoggerSession().addRow(event);
+        else {
+            SuiteInfo.getInstance().addRow(event);
+        }
     }
+
 }

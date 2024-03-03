@@ -20,7 +20,7 @@ public class ExampleEnvironment extends BaseEnv {
         return env;
     }
 
-    public String getAppUrl() {
+    public synchronized String getAppUrl() {
         return getProperty("url");
     }
 

@@ -1,13 +1,12 @@
 package management.playwright;
 
-import com.microsoft.playwright.Browser;
-import com.microsoft.playwright.BrowserContext;
-import com.microsoft.playwright.BrowserType;
-import com.microsoft.playwright.Page;
+import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.Cookie;
+import helpers.FileSystemHelper;
 import lombok.Getter;
 import management.environment.DefaultEnvironment;
 
+import java.io.File;
 import java.util.List;
 
 
@@ -18,11 +17,18 @@ public class BrowserManager {
     @Getter
     private BrowserContext context;//todo need to create as List -- it's useful for tests with 2+ windows
     private final BrowserType browserType;//?
+    private Playwright playwright;
 
-    public BrowserManager(BrowserType browserType, BrowserType.LaunchOptions options) {
+    public BrowserManager(BrowserType browserType, BrowserType.LaunchOptions options, Playwright playwright) {
         this.options = options;
         this.browserType = browserType;
+        this.playwright = playwright;
         initContext();
+    }
+
+    public void closePlaywright(){
+        if(playwright != null)
+            playwright.close();
     }
 
     public BrowserManager(BrowserType browserType, BrowserType.LaunchOptions options, List<Cookie> cookies) {
@@ -41,9 +47,10 @@ public class BrowserManager {
 
         Browser.NewContextOptions opt = new Browser.NewContextOptions().setViewportSize(null).setLocale("en-GB");
         context = browser.newContext(opt);
+        playwright = new PlaywrightSession().getPlaywright();
     }
 
-    public void navigate(String appUrl){
+    public synchronized void navigate(String appUrl){
         Page page = context.newPage();
 
         page.setDefaultNavigationTimeout(DefaultEnvironment.get().getPageTimeout().toMillis());
@@ -54,43 +61,33 @@ public class BrowserManager {
     public static BrowserManager createNew(String browserName, BrowserType.LaunchOptions launchOptions) {
 
         BrowserType browserType;
+        Playwright playwright = new PlaywrightSession().getPlaywright();
         switch (browserName.toLowerCase()) {
             case "chrome":
-                browserType = PlaywrightSession.getInstance().getPlaywright().chromium();
+                //browserType = PlaywrightSession.getInstance().getPlaywright().chromium();
+                browserType = playwright.chromium();
+
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported browser: " + browserName);
         }
-        return new BrowserManager(browserType, launchOptions);
+        return new BrowserManager(browserType, launchOptions, playwright);
 
     }
 
-    public static BrowserManager createNew(String browserName, BrowserType.LaunchOptions launchOptions, List<Cookie> cookies) {
-        BrowserType type = getPWBrowserTypeByName(browserName);
-        if(!cookies.isEmpty())
-            return new BrowserManager(type, launchOptions, cookies);
-        else
-            return new BrowserManager(type, launchOptions);
-    }
-
-    private static BrowserType getPWBrowserTypeByName(String browserName){
-        BrowserType browserType;
-        switch (browserName.toLowerCase()) {
-            case "chrome":
-                browserType = PlaywrightSession.getInstance().getPlaywright().chromium();
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported browser: " + browserName);
-        }
-        return browserType;
-    }
-
-    public void closeBrowser() {
+    public synchronized void closeBrowser() {
         browser.close();
     }
 
     public Page closeLastTab(){
         context.pages().getLast().close();
         return context.pages().getLast();
+    }
+
+    public File makeScreenshot(){
+
+        Page page = getContext().pages().getLast();//now I don't know how to get active/required window, so will take last
+        byte[] buffer = page.screenshot(new Page.ScreenshotOptions().setFullPage(true));
+        return FileSystemHelper.createScreenshotFile(buffer);
     }
 }

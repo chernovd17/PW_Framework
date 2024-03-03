@@ -1,13 +1,12 @@
 package ui.elements;
 
-import LOGGER.withlog4j2.GlobalLoggerSession;
-import LOGGER.entities.LogLevels;
 import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.TimeoutError;
 import com.microsoft.playwright.options.BoundingBox;
 import management.environment.DefaultEnvironment;
+import management.playwright.run_management.Sessions;
 import ui.IWebContext;
 import ui.containers.BaseElementContainer;
 import ui.elements.locator.Loc;
@@ -157,6 +156,6 @@ public class Element {
     }
 
     protected void ACTION(String info) {
-        GlobalLoggerSession.getSession().getLogger().log(LogLevels.ACTION.getLevel(), info);
+        Sessions.getCurrentSession().getLoggerSession().ACTION(info);
     }
 }

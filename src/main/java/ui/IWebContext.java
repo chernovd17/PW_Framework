@@ -1,8 +1,8 @@
 package ui;
 
-import LOGGER.withlog4j2.GlobalLoggerSession;
 import com.microsoft.playwright.Page;
 import helpers.FileSystemHelper;
+import management.playwright.run_management.Sessions;
 import ui.containers.BaseElementContainer;
 import ui.pages.BasePage;
 
@@ -31,9 +31,9 @@ public interface IWebContext {
 
     default void STEP(String info, boolean withScreenshot) {
         if(withScreenshot)
-            GlobalLoggerSession.getSession().STEP(info, makeDefaultScreenshot());
+            Sessions.getCurrentSession().getLoggerSession().STEP(info, makeDefaultScreenshot());
         else
-            GlobalLoggerSession.getSession().STEP(info);
+            Sessions.getCurrentSession().getLoggerSession().STEP(info);
     }
 
     default File makeScreenshot(boolean isFullPage){
