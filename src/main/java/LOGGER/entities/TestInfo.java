@@ -21,7 +21,10 @@ public class TestInfo {
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private List<ReportRow> reportRows = new ArrayList<>();
-
+    private List<ReportRow> beforeTestRows = new ArrayList<>();
+    private List<ReportRow> afterTestRows = new ArrayList<>();
+    private List<ReportRow> activeRows;
+    private boolean isCaseFullyCompleted = false;//true if test has reached the end of case
     private Test testAnnotation;
 
     public TestInfo(Test testAnnotation){
@@ -29,10 +32,38 @@ public class TestInfo {
         title = testAnnotation.testName();
         description = testAnnotation.description();
         startDateTime = LocalDateTime.now();
+        makeBeforeTestRowsActive();
+    }
+
+    private void makeListActive(List<ReportRow> rows) {
+        if (rows == reportRows)
+            activeRows = reportRows;
+        else if (rows == beforeTestRows)
+            activeRows = beforeTestRows;
+        else if (rows == afterTestRows)
+            activeRows = afterTestRows;
+        else
+            throw new IllegalArgumentException("Invalid list specified");
+    }
+
+    public void makeReportRowsActive(){
+        makeListActive(reportRows);
+    }
+
+    public void makeAfterTestRowsActive(){
+        makeListActive(afterTestRows);
+    }
+
+    public void makeBeforeTestRowsActive(){
+        makeListActive(beforeTestRows);
     }
 
     public void addRow(ReportRow row){
-        reportRows.add(row);
+        if (activeRows != null) {
+            activeRows.add(row);
+        } else {
+            throw new IllegalStateException("No active list set");
+        }
     }
 
     public String getTestStatus(){
@@ -98,6 +129,10 @@ public class TestInfo {
 
     public boolean testHasSuccessRows(){
         return reportRows.stream().anyMatch(row -> row.getLogLevel().equals(LogLevels.SUCCESS));
+    }
+
+    public void setCaseFullyCompleted(){
+        isCaseFullyCompleted = true;
     }
 
 }

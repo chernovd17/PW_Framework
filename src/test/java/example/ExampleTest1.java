@@ -2,6 +2,8 @@ package example;
 
 import base_tests.NewBaseTest;
 import helpers.Validation;
+import lombok.Setter;
+import lombok.Synchronized;
 import management.playwright.run_management.Sessions;
 import org.testng.annotations.Test;
 import ui.pages.example.docs_pages.PwInstallationPage;

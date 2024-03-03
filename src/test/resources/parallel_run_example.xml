@@ -11,4 +11,9 @@
             <class name="example.ExampleTest2"/>
         </classes>
     </test>
+    <test name="thread3">
+        <classes>
+            <class name="example.ExampleTest3"/>
+        </classes>
+    </test>
 </suite>

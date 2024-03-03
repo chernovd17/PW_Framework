@@ -36,6 +36,7 @@ public class ExampleTest2 extends NewBaseTest {
 
         PwPagesPage pwPagesPage = pwInstallationPage.openPagesArticle();
 
+        Thread.sleep(10000);
         addTestFinalStatusToLog();
     }
 }

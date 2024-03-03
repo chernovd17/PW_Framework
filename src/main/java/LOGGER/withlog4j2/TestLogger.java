@@ -120,7 +120,9 @@ public class TestLogger {
         log(LogLevels.UNDEFINED, info, screenshot);
     }
 
-    public void addTestFinalStatusToLog(File screenshot){//use it only for last step in test method or as first row in afterMethod
+    //use it only for last step in test method or as first row in afterMethod
+    public void addTestFinalStatusToLog(File screenshot){
+        testInfo.setCaseFullyCompleted();
         if (testInfo.testHasFatalRows())
             //should never happen with current type of implementation
             FATAL(String.format(FATAL_TEST_PATTERN, testInfo.getCountOfFatalRows(), testInfo.getRowsAsString(LogLevels.FATAL),
@@ -134,6 +136,24 @@ public class TestLogger {
             SUCCESS(PASSED_TEST_PATTERN, screenshot);
         else if (!testInfo.getReportRows().isEmpty())
              FATAL(NO_VALIDATIONS_IN_TEST);
+        else
+            SYSTEM(TEST_WAS_SKIPPED);
+    }
+
+    public void addFatalTestFinalStatusToLogAfterMethod(File screenshot){
+        testInfo.setCaseFullyCompleted();
+        if (testInfo.testHasFatalRows())
+            SYSTEM(String.format(FATAL_TEST_PATTERN, testInfo.getCountOfFatalRows(), testInfo.getRowsAsString(LogLevels.FATAL),
+                    testInfo.getCountOfFailedRows(), testInfo.getRowsAsString(LogLevels.FAIL)), screenshot);
+        else if (testInfo.testHasFailedRows()) {
+            String failInfo = String.format(FAILED_TEST_PATTERN, testInfo.getCountOfFailedRows(), testInfo.getRowsAsString(LogLevels.FAIL));
+            FAIL(failInfo, screenshot);
+            throw new AssertionError(failInfo);
+        }
+        else if (testInfo.testHasSuccessRows())
+            SUCCESS(PASSED_TEST_PATTERN, screenshot);
+        else if (!testInfo.getReportRows().isEmpty())
+            FATAL(NO_VALIDATIONS_IN_TEST);
         else
             SYSTEM(TEST_WAS_SKIPPED);
     }

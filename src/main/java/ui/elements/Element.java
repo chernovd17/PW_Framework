@@ -52,13 +52,11 @@ public class Element {
 
     public void click() {
         ACTION(String.format("Click '%s'", name));
-        //DefaultHelper.sleep(Duration.ofSeconds(2));
         getPWLoc().click();
     }
 
     public void typeText(String text) {
         ACTION(String.format("Type Text '%s' in element '%s'", text, name));
-        //DefaultHelper.sleep(Duration.ofSeconds(2));//
         getPWLoc().type(text);
     }
 

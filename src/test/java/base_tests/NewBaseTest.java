@@ -1,9 +1,6 @@
 package base_tests;
 
-import LOGGER.entities.LogLevels;
-import LOGGER.entities.ReportRow;
 import LOGGER.entities.SuiteInfo;
-import LOGGER.entities.TestInfo;
 import LOGGER.withlog4j2.TestLogger;
 import helpers.FileSystemHelper;
 import management.environment.example.ExampleEnvironment;
@@ -13,19 +10,17 @@ import org.testng.ITestContext;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class NewBaseTest {
 
     protected static SuiteInfo suiteInfo;
 
-    /** in TestNG7.9.0 Native Injections for BeforeSuite is disabled
+    /** in TestNG7.9.0 Native Injections for BeforeSuite became disabled
      * **/
     @BeforeSuite(alwaysRun = true)
     public synchronized void beforeSuite(ITestContext context) {
         suiteInfo = SuiteInfo.initSuite(context);
-        FileSystemHelper.initLoggerDirectoryIfNeeded();
+        FileSystemHelper.initLoggerDirectoryIfNeeded();//todo maybe add it before each screenshot making
     }
 
     @BeforeMethod
@@ -34,10 +29,14 @@ public class NewBaseTest {
 
         Sessions.createSession(annotation);
         getBrowserManager().navigate(ExampleEnvironment.get().getAppUrl());
+        getLogger().getTestInfo().makeReportRowsActive();
     }
 
     @AfterMethod(alwaysRun = true)
     public void afterMethod(ITestContext context, Method method, Object[] params) {
+        if(!getLogger().getTestInfo().isCaseFullyCompleted())
+            getLogger().addTestFinalStatusToLog(getBrowserManager().makeScreenshot());
+        getLogger().getTestInfo().makeAfterTestRowsActive();
         suiteInfo.addTestInfo(getLogger().getTestInfo());
         Sessions.killCurrentSession();
     }
@@ -57,30 +56,9 @@ public class NewBaseTest {
         System.out.println(suiteInfo.toString());
     }
 
-
-    /*protected void generateTestFinalStatus(){
-        TestInfo testInfo = getLogger().getTestInfo();
-
-        List<ReportRow> testLogRows = testInfo.getReportRows();
-        List<ReportRow> failedRows = testLogRows.stream()
-                .filter(row -> row.getLogLevel().equals(LogLevels.FAIL))
-                .toList();
-
-        int countOfFailed = failedRows.size();
-        if(countOfFailed > 0){
-            String concatenatedString = failedRows.stream().
-                    map(ReportRow::getInfo).collect(Collectors.joining("\n"));
-            getLogger().FAIL("Test is finished with " + countOfFailed + " UNCRITICAL errors:\n"
-                    + concatenatedString, getBrowserManager().makeScreenshot());
-            throw new AssertionError("Test is finished with " + countOfFailed + " UNCRITICAL errors:\n"
-                    + concatenatedString);
-        } else
-            getLogger().SYSTEM("Test finished SUCCESSFULLY", getBrowserManager().makeScreenshot());
-    }*/
-
+    //only as last step for any testMethod
     protected void addTestFinalStatusToLog(){
         getLogger().addTestFinalStatusToLog(getBrowserManager().makeScreenshot());
-
     }
 
 }

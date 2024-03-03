@@ -1,10 +1,12 @@
 package management.playwright;
 
+import LOGGER.withlog4j2.TestLogger;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.Cookie;
 import helpers.FileSystemHelper;
 import lombok.Getter;
 import management.environment.DefaultEnvironment;
+import management.playwright.run_management.Sessions;
 
 import java.io.File;
 import java.util.List;
@@ -51,6 +53,7 @@ public class BrowserManager {
     }
 
     public synchronized void navigate(String appUrl){
+        getLogger().SYSTEM("Navigate to " + appUrl);
         Page page = context.newPage();
 
         page.setDefaultNavigationTimeout(DefaultEnvironment.get().getPageTimeout().toMillis());
@@ -89,5 +92,9 @@ public class BrowserManager {
         Page page = getContext().pages().getLast();//now I don't know how to get active/required window, so will take last
         byte[] buffer = page.screenshot(new Page.ScreenshotOptions().setFullPage(true));
         return FileSystemHelper.createScreenshotFile(buffer);
+    }
+
+    private TestLogger getLogger() {
+        return Sessions.getCurrentSession().getLoggerSession();
     }
 }
