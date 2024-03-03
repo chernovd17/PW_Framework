@@ -1,6 +1,6 @@
 package example;
 
-import base_tests.NewBaseTest;
+import base_tests.BaseTest;
 import helpers.Validation;
 import management.playwright.run_management.Sessions;
 import org.testng.annotations.Test;
@@ -10,7 +10,7 @@ import ui.pages.example.docs_pages.PwInstallationPage;
 import ui.pages.example.docs_pages.PwPagesPage;
 
 
-public class ExampleTest2 extends NewBaseTest {
+public class ExampleTest2 extends BaseTest {
 
     private static final String EXPECTED_VERSION = "v1.41.2";
     @Test
@@ -37,6 +37,6 @@ public class ExampleTest2 extends NewBaseTest {
         PwPagesPage pwPagesPage = pwInstallationPage.openPagesArticle();
 
         Thread.sleep(10000);
-        addTestFinalStatusToLog();
+        addTestFinalStatusToLogInLastStep();
     }
 }

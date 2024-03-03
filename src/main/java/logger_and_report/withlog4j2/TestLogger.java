@@ -1,17 +1,15 @@
-package LOGGER.withlog4j2;
+package logger_and_report.withlog4j2;
 
-import LOGGER.entities.LogLevels;
-import LOGGER.entities.ReportRow;
-import LOGGER.entities.TestInfo;
+import logger_and_report.entities.LogLevels;
+import logger_and_report.entities.ReportRow;
+import logger_and_report.entities.TestInfo;
 import helpers.FileSystemHelper;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.annotations.Test;
 import org.apache.logging.log4j.core.LogEvent;
-import org.apache.logging.log4j.core.config.plugins.Plugin;
 
 import java.io.File;
 
@@ -120,42 +118,47 @@ public class TestLogger {
         log(LogLevels.UNDEFINED, info, screenshot);
     }
 
-    //use it only for last step in test method or as first row in afterMethod
-    public void addTestFinalStatusToLog(File screenshot){
-        testInfo.setCaseFullyCompleted();
-        if (testInfo.testHasFatalRows())
-            //should never happen with current type of implementation
-            FATAL(String.format(FATAL_TEST_PATTERN, testInfo.getCountOfFatalRows(), testInfo.getRowsAsString(LogLevels.FATAL),
-                    testInfo.getCountOfFailedRows(), testInfo.getRowsAsString(LogLevels.FAIL)), screenshot);
-        else if (testInfo.testHasFailedRows()) {
-            String failInfo = String.format(FAILED_TEST_PATTERN, testInfo.getCountOfFailedRows(), testInfo.getRowsAsString(LogLevels.FAIL));
-            FAIL(failInfo, screenshot);
-            throw new AssertionError(failInfo);
-        }
-        else if (testInfo.testHasSuccessRows())
-            SUCCESS(PASSED_TEST_PATTERN, screenshot);
-        else if (!testInfo.getReportRows().isEmpty())
-             FATAL(NO_VALIDATIONS_IN_TEST);
-        else
-            SYSTEM(TEST_WAS_SKIPPED);
+    //use it only for last step in testMethod or as first row in afterMethod
+    public void addTestFinalStatusToLogInLastStep(File screenshot){
+        addTestFinalStatusToLog(screenshot, true);
     }
 
-    public void addFatalTestFinalStatusToLogAfterMethod(File screenshot){
+    public void addTestFinalStatusToLog(File screenshot){
+        addTestFinalStatusToLog(screenshot, false);
+    }
+
+    private void addTestFinalStatusToLog(File screenshot, boolean isLastStep) {
         testInfo.setCaseFullyCompleted();
-        if (testInfo.testHasFatalRows())
-            SYSTEM(String.format(FATAL_TEST_PATTERN, testInfo.getCountOfFatalRows(), testInfo.getRowsAsString(LogLevels.FATAL),
-                    testInfo.getCountOfFailedRows(), testInfo.getRowsAsString(LogLevels.FAIL)), screenshot);
+        if (testInfo.testHasFatalRows()) {
+            String resultInfo = String.format(FATAL_TEST_PATTERN, testInfo.getCountOfFatalRows(), testInfo.getRowsAsString(LogLevels.FATAL),
+                    testInfo.getCountOfFailedRows(), testInfo.getRowsAsString(LogLevels.FAIL));
+            if(isLastStep)
+                FATAL(resultInfo, screenshot);
+            else
+                FAIL(resultInfo, screenshot);
+            testInfo.setFatalTestStatus();
+        }
         else if (testInfo.testHasFailedRows()) {
             String failInfo = String.format(FAILED_TEST_PATTERN, testInfo.getCountOfFailedRows(), testInfo.getRowsAsString(LogLevels.FAIL));
             FAIL(failInfo, screenshot);
+            testInfo.setFailTestStatus();
             throw new AssertionError(failInfo);
         }
-        else if (testInfo.testHasSuccessRows())
+        else if (testInfo.testHasSuccessRows()) {
             SUCCESS(PASSED_TEST_PATTERN, screenshot);
-        else if (!testInfo.getReportRows().isEmpty())
-            FATAL(NO_VALIDATIONS_IN_TEST);
-        else
+            testInfo.setSuccessTestStatus();
+        }
+        else if (!testInfo.getTestRows().isEmpty()) {
+            if(isLastStep)
+                FATAL(NO_VALIDATIONS_IN_TEST, screenshot);
+            else
+                FAIL(NO_VALIDATIONS_IN_TEST, screenshot);
+            testInfo.setFatalTestStatus();
+        }
+        else {
             SYSTEM(TEST_WAS_SKIPPED);
+            testInfo.setSkippedTestStatus();
+        }
     }
 
 }

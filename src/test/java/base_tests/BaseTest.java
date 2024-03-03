@@ -1,7 +1,7 @@
 package base_tests;
 
-import LOGGER.entities.SuiteInfo;
-import LOGGER.withlog4j2.TestLogger;
+import logger_and_report.entities.SuiteInfo;
+import logger_and_report.withlog4j2.TestLogger;
 import helpers.FileSystemHelper;
 import management.environment.example.ExampleEnvironment;
 import management.playwright.BrowserManager;
@@ -11,7 +11,7 @@ import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 
-public class NewBaseTest {
+public class BaseTest {
 
     protected static SuiteInfo suiteInfo;
 
@@ -57,8 +57,8 @@ public class NewBaseTest {
     }
 
     //only as last step for any testMethod
-    protected void addTestFinalStatusToLog(){
-        getLogger().addTestFinalStatusToLog(getBrowserManager().makeScreenshot());
+    protected void addTestFinalStatusToLogInLastStep(){
+        getLogger().addTestFinalStatusToLogInLastStep(getBrowserManager().makeScreenshot());
     }
 
 }

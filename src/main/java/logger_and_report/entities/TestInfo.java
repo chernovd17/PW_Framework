@@ -1,4 +1,4 @@
-package LOGGER.entities;
+package logger_and_report.entities;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -20,10 +20,11 @@ public class TestInfo {
     private String id;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
-    private List<ReportRow> reportRows = new ArrayList<>();
+    private List<ReportRow> testRows = new ArrayList<>();
     private List<ReportRow> beforeTestRows = new ArrayList<>();
     private List<ReportRow> afterTestRows = new ArrayList<>();
     private List<ReportRow> activeRows;
+    private TestStatus testStatus = TestStatus.UNKNOWN;
     private boolean isCaseFullyCompleted = false;//true if test has reached the end of case
     private Test testAnnotation;
 
@@ -36,8 +37,8 @@ public class TestInfo {
     }
 
     private void makeListActive(List<ReportRow> rows) {
-        if (rows == reportRows)
-            activeRows = reportRows;
+        if (rows == testRows)
+            activeRows = testRows;
         else if (rows == beforeTestRows)
             activeRows = beforeTestRows;
         else if (rows == afterTestRows)
@@ -47,7 +48,7 @@ public class TestInfo {
     }
 
     public void makeReportRowsActive(){
-        makeListActive(reportRows);
+        makeListActive(testRows);
     }
 
     public void makeAfterTestRowsActive(){
@@ -68,7 +69,7 @@ public class TestInfo {
 
     public String getTestStatus(){
 
-        List<ReportRow> rows = getReportRows();
+        List<ReportRow> rows = getTestRows();
 
         List<ReportRow> failedRows = rows.stream().filter(
                 row -> row.getLogLevel().equals(LogLevels.FAIL)).toList();
@@ -93,22 +94,22 @@ public class TestInfo {
 
 
     public String getAllReportRows(){
-        return reportRows.stream().map(ReportRow::toString).collect(Collectors.joining("\n"));
+        return testRows.stream().map(ReportRow::toString).collect(Collectors.joining("\n"));
     }
 
     public String getRowsAsString(LogLevels level){
-        return reportRows.stream()
+        return testRows.stream()
                 .filter(row -> row.getLogLevel().equals(level))
                 .map(ReportRow::getInfo)
                 .collect(Collectors.joining("\n"));
     }
 
     private List<ReportRow> getAllFatalRows(){
-        return reportRows.stream().filter(row -> row.getLogLevel().equals(LogLevels.FATAL)).toList();
+        return testRows.stream().filter(row -> row.getLogLevel().equals(LogLevels.FATAL)).toList();
     }
 
     private List<ReportRow> getAllFailedRows(){
-        return reportRows.stream().filter(row -> row.getLogLevel().equals(LogLevels.FAIL)).toList();
+        return testRows.stream().filter(row -> row.getLogLevel().equals(LogLevels.FAIL)).toList();
     }
 
     public int getCountOfFatalRows(){
@@ -128,11 +129,30 @@ public class TestInfo {
     }
 
     public boolean testHasSuccessRows(){
-        return reportRows.stream().anyMatch(row -> row.getLogLevel().equals(LogLevels.SUCCESS));
+        return testRows.stream().anyMatch(row -> row.getLogLevel().equals(LogLevels.SUCCESS));
     }
 
     public void setCaseFullyCompleted(){
         isCaseFullyCompleted = true;
     }
 
+    private void setTestStatus(TestStatus testStatus){
+        this.testStatus = testStatus;
+    }
+
+    public void setFailTestStatus(){
+        setTestStatus(TestStatus.FAIL);
+    }
+
+    public void setSuccessTestStatus(){
+        setTestStatus(TestStatus.SUCCESS);
+    }
+
+    public void setFatalTestStatus(){
+        setTestStatus(TestStatus.FATAL);
+    }
+
+    public void setSkippedTestStatus(){
+        setTestStatus(TestStatus.SKIPPED);
+    }
 }

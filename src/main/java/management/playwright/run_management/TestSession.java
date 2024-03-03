@@ -1,6 +1,6 @@
 package management.playwright.run_management;
 
-import LOGGER.withlog4j2.TestLogger;
+import logger_and_report.withlog4j2.TestLogger;
 import lombok.Getter;
 import management.playwright.BrowserManager;
 

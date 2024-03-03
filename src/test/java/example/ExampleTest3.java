@@ -1,15 +1,11 @@
 package example;
 
-import base_tests.NewBaseTest;
+import base_tests.BaseTest;
 import helpers.Validation;
-import management.playwright.run_management.Sessions;
 import org.testng.annotations.Test;
-import ui.pages.example.PwMainPage;
-import ui.pages.example.docs_pages.PwInstallationPage;
-import ui.pages.example.docs_pages.PwPagesPage;
 
 
-public class ExampleTest3 extends NewBaseTest {
+public class ExampleTest3 extends BaseTest {
 
     @Test(testName = "TestEx3", description = "descr3")
     public void test() throws InterruptedException {
@@ -20,6 +16,6 @@ public class ExampleTest3 extends NewBaseTest {
         Validation.assertEquals(true,  false,"Test3 atrue");
         Validation.assertTrue(false, "Test3 afalse");
 
-        addTestFinalStatusToLog();
+        addTestFinalStatusToLogInLastStep();
     }
 }

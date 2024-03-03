@@ -1,6 +1,6 @@
 package management.playwright;
 
-import LOGGER.withlog4j2.TestLogger;
+import logger_and_report.withlog4j2.TestLogger;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.Cookie;
 import helpers.FileSystemHelper;
@@ -49,7 +49,6 @@ public class BrowserManager {
 
         Browser.NewContextOptions opt = new Browser.NewContextOptions().setViewportSize(null).setLocale("en-GB");
         context = browser.newContext(opt);
-        playwright = new PlaywrightSession().getPlaywright();
     }
 
     public synchronized void navigate(String appUrl){

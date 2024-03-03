@@ -1,9 +1,7 @@
 package example;
 
-import base_tests.NewBaseTest;
+import base_tests.BaseTest;
 import helpers.Validation;
-import lombok.Setter;
-import lombok.Synchronized;
 import management.playwright.run_management.Sessions;
 import org.testng.annotations.Test;
 import ui.pages.example.docs_pages.PwInstallationPage;
@@ -11,7 +9,7 @@ import ui.pages.example.PwMainPage;
 import ui.pages.example.docs_pages.PwPagesPage;
 
 
-public class ExampleTest1 extends NewBaseTest {
+public class ExampleTest1 extends BaseTest {
 
     @Test(testName = "TestNName", description = "descr")
     public void test(){
@@ -29,8 +27,7 @@ public class ExampleTest1 extends NewBaseTest {
         Validation.verifyEquals(123, 1234, "Test13");
 
         Validation.assertEquals("Test", "Test", "Test14");
-        Validation.assertEquals("asd", "asd", "Test15");
 
-        addTestFinalStatusToLog();
+        addTestFinalStatusToLogInLastStep();
     }
 }

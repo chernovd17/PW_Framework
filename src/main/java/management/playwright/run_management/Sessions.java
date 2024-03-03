@@ -1,6 +1,6 @@
 package management.playwright.run_management;
 
-import LOGGER.withlog4j2.TestLogger;
+import logger_and_report.withlog4j2.TestLogger;
 import com.microsoft.playwright.BrowserType;
 import management.environment.example.ExampleEnvironment;
 import management.playwright.BrowserManager;

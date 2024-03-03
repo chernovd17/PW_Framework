@@ -1,4 +1,4 @@
-package LOGGER.entities;
+package logger_and_report.entities;
 
 import helpers.FileSystemHelper;
 import lombok.Getter;

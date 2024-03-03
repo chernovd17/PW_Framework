@@ -1,6 +1,6 @@
-package LOGGER.withlog4j2;
+package logger_and_report.withlog4j2;
 
-import LOGGER.entities.SuiteInfo;
+import logger_and_report.entities.SuiteInfo;
 import management.playwright.run_management.Sessions;
 import management.playwright.run_management.TestSession;
 import org.apache.logging.log4j.core.Filter;

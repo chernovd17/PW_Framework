@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN" packages="LOGGER.withlog4j2">
+<Configuration status="WARN" packages="logger_and_report.withlog4j2">
 
     <CustomLevels>
         <CustomLevel name="SYSTEM" />
