@@ -29,6 +29,6 @@ public class ExampleTest1 extends NewBaseTest {
         Validation.assertEquals("Test", "Test", "Test14");
         Validation.assertEquals("asd", "asd", "Test15");
 
-        addTestFinalStatusToLog();
+        generateTestFinalStatus();
     }
 }

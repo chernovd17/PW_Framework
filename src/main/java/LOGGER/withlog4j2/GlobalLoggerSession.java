@@ -1,47 +1,65 @@
 package LOGGER.withlog4j2;
 
 import LOGGER.entities.LogLevels;
-import LOGGER.entities.ReportRow;
-import LOGGER.entities.TestInfo;
+import LOGGER.entities.SuiteInfo;
 import helpers.FileSystemHelper;
 import lombok.Getter;
-import org.apache.logging.log4j.Level;
+import management.environment.LoggerEnvironment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.testng.ITestContext;
 import org.testng.annotations.Test;
-import org.apache.logging.log4j.core.LogEvent;
 
 import java.io.File;
 
-public class TestLogger {
 
-    @Getter
-    private TestInfo testInfo;
+public class GlobalLoggerSession {
+
     private static Logger logger;
 
-   //private TestLogger session = null;
+    private static GlobalLoggerSession session = null;
 
-    public TestLogger(Test annotation){
-        testInfo = new TestInfo(annotation);
-        logger = LogManager.getLogger(CustomUIAppender.class);
+    @Getter
+    private SuiteInfo suiteInfo;
+
+    private static TestLogger testLoggerSession;
+
+    public static GlobalLoggerSession getSession(){
+        if(session == null)
+            throw new IllegalStateException("GLOBAL LOGGER IS NOT INITIALIZED");
+        return session;
     }
 
+    public Logger getLogger() {
+        return logger;
+    }
 
-    public void addRow(LogEvent event) {
-        Object[] parameters = event.getMessage().getParameters();
-        File screenshot = null;
-        if (parameters != null && parameters.length > 0 && parameters[0] instanceof byte[] screenshotData) {
-            screenshot = FileSystemHelper.createScreenshotFile(screenshotData);
-        }
-        testInfo.addRow(ReportRow.createReportRow(event, screenshot));
+    public static GlobalLoggerSession initLoggerAndSuiteInfo(ITestContext context){
+        logger = LogManager.getLogger(CustomUIAppender.class);
+        session = new GlobalLoggerSession();
+        session.suiteInfo = new SuiteInfo(context);
+        FileSystemHelper.createDirectoryIfNeeded(LoggerEnvironment.get().getLoggerDirectory());
+        FileSystemHelper.createDirectoryIfNeeded(LoggerEnvironment.get().getLoggerScreenshotsDirectory());
+        return session;
+    }
+
+    public void initTestLoggerSession(Test testAnnotation) {
+        if(testLoggerSession == null)
+            testLoggerSession = new TestLogger(testAnnotation);
+    }
+
+    public TestLogger getTestLogger() {
+        if(testLoggerSession == null)
+            throw new IllegalStateException("TEST LOGGER IS NOT INITIALIZED");
+        return testLoggerSession;
+    }
+
+    public void resetTestLoggerSession() {
+        testLoggerSession = null;
     }
 
     private void log(LogLevels level, String info, File screenshot){
         logger.log(level.getLevel(), info, screenshot);
-    }
-
-    public void log(Level level, String info, File screenshot){
-        logger.log(level, info, screenshot);
     }
 
     private void log(LogLevels level, String info){
@@ -82,12 +100,12 @@ public class TestLogger {
 
     public void FATAL(String info, File screenshot) {
         log(LogLevels.FATAL, info, screenshot);
-        throw new Error(info);
+        throw new AssertionError(info);
     }
 
     public void FATAL(String info) {
         log(LogLevels.FATAL, info);
-        throw new Error(info);
+        throw new AssertionError(info);
     }
 
     public void SYSTEM(String info) {
@@ -101,7 +119,6 @@ public class TestLogger {
     public void INFO(String info) {
         log(LogLevels.INFO, info);
     }
-
     public void INFO(String info, File screenshot) {
         log(LogLevels.INFO, info, screenshot);
     }
@@ -109,7 +126,6 @@ public class TestLogger {
     public void UNDEFINED(String info) {
         log(LogLevels.UNDEFINED, info);
     }
-
     public void UNDEFINED(String info, File screenshot) {
         log(LogLevels.UNDEFINED, info, screenshot);
     }

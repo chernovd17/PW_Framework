@@ -29,6 +29,7 @@ public class ExampleTest2 extends NewBaseTest {
         Thread.sleep(1231);
         Validation.verifyTrue(actual.equals(EXPECTED_VERSION), "Verify if Version is as expected24");
 
+
         //Validation.verifyTrue(false, "just false");
 
         gitHubRepositoryPage = new GitHubRepositoryPage(Sessions.getCurrentSession().getBrowserManager().closeLastTab());
@@ -36,6 +37,6 @@ public class ExampleTest2 extends NewBaseTest {
 
         PwPagesPage pwPagesPage = pwInstallationPage.openPagesArticle();
 
-        addTestFinalStatusToLog();
+        generateTestFinalStatus();
     }
 }

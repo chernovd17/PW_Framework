@@ -1,14 +1,14 @@
 package LOGGER.withlog4j2;
 
-import LOGGER.entities.SuiteInfo;
 import management.playwright.run_management.Sessions;
-import management.playwright.run_management.TestSession;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.LogEvent;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
@@ -35,12 +35,8 @@ public class CustomUIAppender extends AbstractAppender {
 
     @Override
     public synchronized void append(LogEvent event) {
-        TestSession currentSession = Sessions.getCurrentSession();
-        if(currentSession != null)
-            currentSession.getLoggerSession().addRow(event);
-        else {
-            SuiteInfo.getInstance().addRow(event);
-        }
+        Sessions.getCurrentSession().getLoggerSession().addRow(event);
+        //TestLogger.getTestLogger().addRow(event);
     }
 
 }

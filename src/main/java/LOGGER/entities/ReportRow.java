@@ -24,13 +24,13 @@ public class ReportRow {
     private static final String UNDEFINED = "UNDEFINED";
 
     private LocalDateTime dateTime;
-    private LogLevels logLevel;
+    private LogLevels logLevels;
     private String info;
     private File screenshot;
 
     private ReportRow(LogLevels infoType, String info, LocalDateTime dateTime, File screenshot){
         this.dateTime = dateTime;
-        this.logLevel = infoType;
+        this.logLevels = infoType;
         this.info = info;
         this.screenshot = screenshot;
     }
@@ -44,19 +44,15 @@ public class ReportRow {
 
     private static LogLevels getLogLevel(LogEvent event){
         return switch (event.getLevel().toString()) {
-            case INFO -> LogLevels.INFO;
-            case SYSTEM -> LogLevels.SYSTEM;
-            case ACTION -> LogLevels.ACTION;
             case STEP -> LogLevels.STEP;
+            case ACTION -> LogLevels.ACTION;
             case SUCCESS -> LogLevels.SUCCESS;
             case FAIL -> LogLevels.FAIL;
             case FATAL -> LogLevels.FATAL;
+            case INFO -> LogLevels.INFO;
+            case SYSTEM -> LogLevels.SYSTEM;
             case API -> LogLevels.API;
             default -> LogLevels.UNDEFINED;
         };
-    }
-
-    public String toString(){
-        return dateTime + " " + logLevel + " " + info;
     }
 }

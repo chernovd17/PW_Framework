@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @Getter
 public class TestInfo {
 
+    public static String FAILED_TEST_PATTER = "Test is finished with %s UNCRITICAL errors:\n";
     private String title;
     private String description;
     private String comment;
@@ -20,6 +21,8 @@ public class TestInfo {
     private String id;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
+
+
     private List<ReportRow> reportRows = new ArrayList<>();
 
     private Test testAnnotation;
@@ -40,15 +43,14 @@ public class TestInfo {
         List<ReportRow> rows = getReportRows();
 
         List<ReportRow> failedRows = rows.stream().filter(
-                row -> row.getLogLevel().equals(LogLevels.FAIL)).toList();
+                row -> row.getLogLevels().equals(LogLevels.FAIL)).toList();
 
         List<ReportRow> fatalRows = rows.stream().filter(
-                row -> row.getLogLevel().equals(LogLevels.FATAL)).toList();
+                row -> row.getLogLevels().equals(LogLevels.FATAL)).toList();
 
         if(failedRows.isEmpty() && fatalRows.isEmpty()){
             return "PASSED";
         }
-
         if(fatalRows.isEmpty() && !failedRows.isEmpty()){
             return "FAILED";
         }
@@ -61,43 +63,5 @@ public class TestInfo {
     }
 
 
-    public String getAllReportRows(){
-        return reportRows.stream().map(ReportRow::toString).collect(Collectors.joining("\n"));
-    }
-
-    public String getRowsAsString(LogLevels level){
-        return reportRows.stream()
-                .filter(row -> row.getLogLevel().equals(level))
-                .map(ReportRow::getInfo)
-                .collect(Collectors.joining("\n"));
-    }
-
-    private List<ReportRow> getAllFatalRows(){
-        return reportRows.stream().filter(row -> row.getLogLevel().equals(LogLevels.FATAL)).toList();
-    }
-
-    private List<ReportRow> getAllFailedRows(){
-        return reportRows.stream().filter(row -> row.getLogLevel().equals(LogLevels.FAIL)).toList();
-    }
-
-    public int getCountOfFatalRows(){
-        return getAllFatalRows().size();//never should be more than 1
-    }
-
-    public int getCountOfFailedRows(){
-        return getAllFailedRows().size();
-    }
-
-    public boolean testHasFatalRows(){
-        return !getAllFatalRows().isEmpty();
-    }
-
-    public boolean testHasFailedRows(){
-        return !getAllFailedRows().isEmpty();
-    }
-
-    public boolean testHasSuccessRows(){
-        return reportRows.stream().anyMatch(row -> row.getLogLevel().equals(LogLevels.SUCCESS));
-    }
 
 }

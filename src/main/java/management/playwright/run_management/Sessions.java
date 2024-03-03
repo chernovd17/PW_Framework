@@ -2,9 +2,11 @@ package management.playwright.run_management;
 
 import LOGGER.withlog4j2.TestLogger;
 import com.microsoft.playwright.BrowserType;
+import lombok.Getter;
 import management.environment.example.ExampleEnvironment;
 import management.playwright.BrowserManager;
 import org.testng.annotations.Test;
+import ui.pages.BasePage;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -44,7 +46,7 @@ public class Sessions {
         return getCurrentSession().getBrowserManager();
     }
 
-    public synchronized static void killCurrentSession() {
+    public static void killCurrentSession() {
         getCurrentSession().getLoggerSession().SYSTEM("Killing current session '" + getCurrentSession().getThreadId() + "'.");
         getCurrentSession().getBrowserManager().closeBrowser();
         getCurrentSession().getLoggerSession().getTestInfo().setEndDateTime(LocalDateTime.now());
@@ -58,9 +60,5 @@ public class Sessions {
             session.getLoggerSession().getTestInfo().setEndDateTime(LocalDateTime.now());
         }
         sessions.clear();
-    }
-
-    private static boolean sessionsExist() {
-        return !sessions.isEmpty();
     }
 }

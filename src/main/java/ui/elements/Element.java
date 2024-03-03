@@ -1,5 +1,7 @@
 package ui.elements;
 
+import LOGGER.withlog4j2.GlobalLoggerSession;
+import LOGGER.entities.LogLevels;
 import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;

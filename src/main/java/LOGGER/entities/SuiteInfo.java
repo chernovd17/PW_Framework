@@ -1,12 +1,10 @@
 package LOGGER.entities;
 
-import helpers.FileSystemHelper;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.logging.log4j.core.LogEvent;
+import lombok.extern.log4j.Log4j2;
 import org.testng.ITestContext;
 
-import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,32 +24,16 @@ public class SuiteInfo {
     private int countOfFailedTests = 0;
     private int countOfFatalTests = 0;
     private int countOfSkippedTests = 0;
+
     private List<TestInfo> tests = new ArrayList<>();
+
     private ITestContext context;
-    
-    private static SuiteInfo instance;
 
-    private List<ReportRow> reportRows = new ArrayList<>();
-
-
-    private SuiteInfo(ITestContext context){
+    public SuiteInfo(ITestContext context){
         this.context = context;
         title = context.getName();
         startDateTime = LocalDateTime.now();
         allTestsCount = context.getAllTestMethods().length;
-    }
-
-    public static SuiteInfo initSuite(ITestContext context) {
-        if (instance == null) {
-            instance = new SuiteInfo(context);
-        }
-        return instance;
-    }
-    
-    public static SuiteInfo getInstance() {
-        if(instance == null)
-            throw new IllegalStateException("SuiteInfo is not initialized");
-        return instance;
     }
 
     public synchronized void addSuccess() {
@@ -106,14 +88,5 @@ public class SuiteInfo {
         long seconds = duration.getSeconds() % 60;
 
         return days + " days, " + hours + " hours, " + minutes + " minutes, " + seconds + " seconds";
-    }
-
-    public void addRow(LogEvent event) {
-        Object[] parameters = event.getMessage().getParameters();
-        File screenshot = null;
-        if (parameters != null && parameters.length > 0 && parameters[0] instanceof byte[] screenshotData) {
-            screenshot = FileSystemHelper.createScreenshotFile(screenshotData);
-        }
-        reportRows.add(ReportRow.createReportRow(event, screenshot));
     }
 }
