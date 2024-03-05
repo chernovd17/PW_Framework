@@ -9,7 +9,7 @@ import ui.pages.example.docs_pages.PwInstallationPage;
 
 public class PwHeaderElementContainer extends BaseElementContainer {
 
-    private Element docsElement = new Element("Docs", this, Loc.xpath(".//a[text()='Docs']"));
+    private Element docsElement = new Element("Docs", this, Loc.xpath(".//a[text()='Doc1s']"));
     private Element gitIcon = new Element("Git Icon", this, Loc.css("a[aria-label='GitHub repository']"));
 
     public PwHeaderElementContainer(IWebContext parent) {

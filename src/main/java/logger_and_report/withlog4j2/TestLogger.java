@@ -127,6 +127,7 @@ public class TestLogger {
         addTestFinalStatusToLog(screenshot, false);
     }
 
+    //todo need to add this Row as separate Info to the UI report (as first maybe)
     private void addTestFinalStatusToLog(File screenshot, boolean isLastStep) {
         testInfo.setCaseFullyCompleted();
         if (testInfo.testHasFatalRows()) {

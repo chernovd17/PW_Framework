@@ -55,7 +55,8 @@ public class BrowserManager {
         getLogger().SYSTEM("Navigate to " + appUrl);
         Page page = context.newPage();
 
-        page.setDefaultNavigationTimeout(DefaultEnvironment.get().getPageTimeout().toMillis());
+        page.setDefaultNavigationTimeout(DefaultEnvironment.get().getNavigationPageTimeout().toMillis());//30 seconds is default
+        page.setDefaultTimeout(DefaultEnvironment.get().getPageTimeout().toMillis());//1 millisecond is default
 
         page.navigate(appUrl);
     }

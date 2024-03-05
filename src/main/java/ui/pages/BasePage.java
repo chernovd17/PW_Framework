@@ -3,6 +3,7 @@ package ui.pages;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
 import lombok.Getter;
+import management.environment.DefaultEnvironment;
 import ui.IWebContext;
 import ui.containers.BaseElementContainer;
 
@@ -10,7 +11,7 @@ import java.time.Duration;
 
 public abstract class BasePage implements IWebContext {
 
-    private Duration pageDuration = Duration.ofSeconds(90);
+    private Duration pageDuration = DefaultEnvironment.get().getNavigationPageTimeout();
     @Getter
     private String name;
     @Getter

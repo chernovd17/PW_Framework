@@ -41,6 +41,11 @@ public interface IWebContext {
         return FileSystemHelper.createScreenshotFile(buffer);
     }
 
+    default File makeScreenshotIfPossible(boolean isFullPage){
+        byte[] buffer = getPwPage().screenshot(new Page.ScreenshotOptions().setFullPage(isFullPage));
+        return FileSystemHelper.createScreenshotFile(buffer);
+    }
+
     default File makeDefaultScreenshot(){
         return makeScreenshot(false);
     }
