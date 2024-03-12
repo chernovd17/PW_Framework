@@ -11,11 +11,11 @@ public class ExampleTest3 extends BaseTest {
     public void test() throws InterruptedException {
 
         Validation.verifyTrue(true, "Test3 vtrue");
-        Validation.verifyTrue(false, "Test3 vfalse");
+        Validation.verifyTrue(true, "Test3 vfalse");
 
-        Validation.assertEquals(true,  false,"Test3 atrue");
-        Validation.assertTrue(false, "Test3 afalse");
+        Validation.assertEquals(true,  true,"Test3 atrue");
+        Validation.assertTrue(true, "Test3 afalse");
 
-        addTestFinalStatusToLogInLastStep();
+        generateTestFinalStatus();
     }
 }

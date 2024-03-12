@@ -53,15 +53,11 @@ public class Element {
     }
 
     public void click() {
-        ACTION(String.format("Click '%s'", name));
-        try {
-            //todo need to clarify how waitings work in playwright
-            // now it looks that defaultPageTimeout we can ignore only like below,
-            // but we can't set PageTimeout as 1 millis and wait element more than 1 millis
-            getPWLoc().click(new Locator.ClickOptions().setForce(true).setTimeout(1));
-        } catch (Exception e){
-            logError(e.getMessage());
-        }
+        //todo need to clarify how waitings work in playwright
+        // now it looks that defaultPageTimeout we can ignore only like below,
+        // but we can't set PageTimeout as 1 millis and wait element more than 1 millis
+        // 1 millisecond is too small for this case, so 2-3 seconds is the best option
+        waitAndClick(defaultElementDuration);
     }
 
     public void waitAndClick(Duration durationInSec) {
@@ -75,13 +71,13 @@ public class Element {
 
     public void typeText(String text) {
         ACTION(String.format("Type Text '%s' in element '%s'", text, name));
-        getPWLoc().type(text);
+        getPWLoc().type(text, new Locator.TypeOptions().setTimeout(defaultElementDuration.toMillis()));
     }
 
     public void fillText(String text) {
         ACTION(String.format("Fill Text '%s' in element '%s'", text, name));
         try {
-            getPWLoc().fill(text);
+            getPWLoc().fill(text, new Locator.FillOptions().setTimeout(defaultElementDuration.toMillis()));
         } catch (Exception e){
             logError(e.getMessage());
         }
@@ -103,7 +99,7 @@ public class Element {
     public void fillTextWithForce(String text) {
         ACTION(String.format("Fill Text '%s' in element '%s'", text, name));
         try {
-            getPWLoc().fill(text, new Locator.FillOptions().setForce(true));
+            getPWLoc().fill(text, new Locator.FillOptions().setForce(true).setTimeout(defaultElementDuration.toMillis()));
         } catch (Exception e){
             logError(e.getMessage());
         }
@@ -112,7 +108,7 @@ public class Element {
     public String getText() {
         ACTION("Get text from Element '" + getLogicalName() + "'.");
         try {
-            return getPWLoc().innerText();
+            return getPWLoc().innerText(new Locator.InnerTextOptions().setTimeout(defaultElementDuration.toMillis()));
         } catch (Exception e){
             logError(e.getMessage());
         }
@@ -121,7 +117,7 @@ public class Element {
 
     public String getProperty(String property) {
         try {
-            return getPWLoc().getAttribute(property);
+            return getPWLoc().getAttribute(property, new Locator.GetAttributeOptions().setTimeout(defaultElementDuration.toMillis()));
         } catch (Exception e){
             logError(e.getMessage());
         }
@@ -130,7 +126,8 @@ public class Element {
 
     public boolean visible() {
         try {
-            return getPWLoc().isVisible();
+            //works without waitings
+            return getPWLoc().isVisible(new Locator.IsVisibleOptions());
         } catch (Exception e){
             logError(e.getMessage());
         }

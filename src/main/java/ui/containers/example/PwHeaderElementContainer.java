@@ -1,5 +1,6 @@
 package ui.containers.example;
 
+import helpers.Validation;
 import ui.IWebContext;
 import ui.containers.BaseElementContainer;
 import ui.elements.Element;
@@ -9,7 +10,7 @@ import ui.pages.example.docs_pages.PwInstallationPage;
 
 public class PwHeaderElementContainer extends BaseElementContainer {
 
-    private Element docsElement = new Element("Docs", this, Loc.xpath(".//a[text()='Doc1s']"));
+    private Element docsElement = new Element("Docs", this, Loc.xpath(".//a[text()='Docs']"));
     private Element gitIcon = new Element("Git Icon", this, Loc.css("a[aria-label='GitHub repository']"));
 
     public PwHeaderElementContainer(IWebContext parent) {
@@ -17,6 +18,7 @@ public class PwHeaderElementContainer extends BaseElementContainer {
     }
 
     public PwInstallationPage openDocsPage() {
+        Validation.verifyTrue(docsElement.visible(), "Docs element is not displayed");
         docsElement.click();
         PwInstallationPage pwInstallationPage = new PwInstallationPage(this.getPwPage().context());
         pwInstallationPage.waitForOpening();

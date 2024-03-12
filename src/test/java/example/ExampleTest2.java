@@ -36,7 +36,7 @@ public class ExampleTest2 extends BaseTest {
 
         PwPagesPage pwPagesPage = pwInstallationPage.openPagesArticle();
 
-        Thread.sleep(10000);
-        addTestFinalStatusToLogInLastStep();
+        Thread.sleep(1000);
+        generateTestFinalStatus();
     }
 }

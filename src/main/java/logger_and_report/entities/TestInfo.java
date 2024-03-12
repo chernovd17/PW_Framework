@@ -12,6 +12,11 @@ import java.util.stream.Collectors;
 @Setter
 @Getter
 public class TestInfo {
+    private static final String PASSED_TEST_PATTERN = "Test is finished SUCCESSFULLY";
+    private static final String FAILED_TEST_PATTERN = "Test is finished with %s UNCRITICAL errors:\n%s";
+    private static final String FATAL_TEST_PATTERN = "Test is finished with %s FATAL error:\n%s\n And contains %s UNCRITICAL errors:\n%s";
+    private static final String NO_VALIDATIONS_IN_TEST = "Test doesn't contains any validation steps";
+    private static final String TEST_WAS_SKIPPED = "Test was skipped";
 
     private String title;
     private String description;
@@ -24,9 +29,10 @@ public class TestInfo {
     private List<ReportRow> beforeTestRows = new ArrayList<>();
     private List<ReportRow> afterTestRows = new ArrayList<>();
     private List<ReportRow> activeRows;
-    private TestStatus testStatus = TestStatus.UNKNOWN;
+    private TestStatus testStatus;
     private boolean isCaseFullyCompleted = false;//true if test has reached the end of case
     private Test testAnnotation;
+    private String finalStatusString;
 
     public TestInfo(Test testAnnotation){
         this.testAnnotation = testAnnotation;
@@ -65,27 +71,6 @@ public class TestInfo {
         } else {
             throw new IllegalStateException("No active list set");
         }
-    }
-
-    public String getTestStatus(){
-
-        List<ReportRow> rows = getTestRows();
-
-        List<ReportRow> failedRows = rows.stream().filter(
-                row -> row.getLogLevel().equals(LogLevels.FAIL)).toList();
-
-        List<ReportRow> fatalRows = rows.stream().filter(
-                row -> row.getLogLevel().equals(LogLevels.FATAL)).toList();
-
-        if(failedRows.isEmpty() && fatalRows.isEmpty()){
-            return "PASSED";
-        }
-
-        if(fatalRows.isEmpty() && !failedRows.isEmpty()){
-            return "FAILED";
-        }
-
-        return "FATAL";
     }
 
     public void setEndDateTime(){
@@ -155,4 +140,53 @@ public class TestInfo {
     public void setSkippedTestStatus(){
         setTestStatus(TestStatus.SKIPPED);
     }
+
+    private void generateFatalStatusString(){
+        finalStatusString = String.format(FATAL_TEST_PATTERN, getCountOfFatalRows(), getRowsAsString(LogLevels.FATAL),
+                getCountOfFailedRows(), getRowsAsString(LogLevels.FAIL));
+    }
+
+    private void generateFailedStatusString(){
+        finalStatusString = String.format(FAILED_TEST_PATTERN, getCountOfFailedRows(), getRowsAsString(LogLevels.FAIL));
+    }
+
+    private void generateSuccessStatusString(){
+        finalStatusString = PASSED_TEST_PATTERN;
+    }
+
+    private void generateSkippedStatusString(){
+        finalStatusString = TEST_WAS_SKIPPED;
+    }
+
+    private void generateNoValidationsStatusString(){
+        finalStatusString = NO_VALIDATIONS_IN_TEST;
+    }
+
+
+    //use it only in the end of test
+    public TestStatus generateFinalTestStatus(){
+        if (testHasFatalRows()) {
+            generateFatalStatusString();
+            setTestStatus(TestStatus.FATAL);
+        }
+        else if (testHasFailedRows()) {
+            generateFailedStatusString();
+            setTestStatus(TestStatus.FAIL);
+        }
+        else if (testHasSuccessRows()) {
+            generateSuccessStatusString();
+            setTestStatus(TestStatus.SUCCESS);
+        }
+        else if (!getTestRows().isEmpty()) {
+            generateNoValidationsStatusString();
+            setTestStatus(TestStatus.UNKNOWN);
+        }
+        else {
+            generateSkippedStatusString();
+            setTestStatus(TestStatus.SKIPPED);
+        }
+
+        return testStatus;
+    }
+
 }
