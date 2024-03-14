@@ -2,7 +2,7 @@ package management.playwright.run_management;
 
 import logger_and_report.withlog4j2.TestLogger;
 import com.microsoft.playwright.BrowserType;
-import management.environment.example.ExampleEnvironment;
+import management.environment.DefaultEnvironment;
 import management.playwright.BrowserManager;
 import org.testng.annotations.Test;
 
@@ -23,7 +23,7 @@ public class Sessions {
                 .setHeadless(false)
                 .setChannel("chrome")
                 .setArgs(args);
-        BrowserManager localBrowserManager = BrowserManager.createNew(ExampleEnvironment.get().getBrowserName(), type);
+        BrowserManager localBrowserManager = BrowserManager.createNew(DefaultEnvironment.get().getBrowserName(), type);
         TestLogger logger = new TestLogger(annotation);
         TestSession session = new TestSession(localBrowserManager, logger, Thread.currentThread().threadId());
         sessions.add(session);

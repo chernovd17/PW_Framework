@@ -36,7 +36,23 @@ public interface IWebContext {
             Sessions.getCurrentSession().getLoggerSession().STEP(info);
     }
 
+    default void FATAL(String info) {
+        FATAL(info, true);
+    }
+
+    default void FATAL(String info, boolean withScreenshot) {
+        if(withScreenshot)
+            Sessions.getCurrentSession().getLoggerSession().FATAL(info, makeDefaultScreenshot());
+        else
+            Sessions.getCurrentSession().getLoggerSession().FATAL(info);
+    }
+
     default File makeScreenshot(boolean isFullPage){
+        byte[] buffer = getPwPage().screenshot(new Page.ScreenshotOptions().setFullPage(isFullPage));
+        return FileSystemHelper.createScreenshotFile(buffer);
+    }
+
+    default File makeScreenshotIfPossible(boolean isFullPage){
         byte[] buffer = getPwPage().screenshot(new Page.ScreenshotOptions().setFullPage(isFullPage));
         return FileSystemHelper.createScreenshotFile(buffer);
     }

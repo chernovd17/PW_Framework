@@ -25,9 +25,14 @@ public class DefaultEnvironment extends BaseEnv {
         return getProperty("browser");
     }
 
+    public Duration getNavigationPageTimeout() {
+        return Duration.ofSeconds(Integer.parseInt(getProperty("timeouts.navigation")));
+    }
+
     public Duration getPageTimeout() {
         return Duration.ofSeconds(Integer.parseInt(getProperty("timeouts.page")));
     }
+
 
     public Duration getElementTimeout() {
         return Duration.ofSeconds(Integer.parseInt(getProperty("timeouts.element")));

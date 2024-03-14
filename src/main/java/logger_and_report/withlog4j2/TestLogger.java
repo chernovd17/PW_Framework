@@ -4,6 +4,7 @@ import logger_and_report.entities.LogLevels;
 import logger_and_report.entities.ReportRow;
 import logger_and_report.entities.TestInfo;
 import helpers.FileSystemHelper;
+import logger_and_report.entities.TestStatus;
 import lombok.Getter;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -14,12 +15,6 @@ import org.apache.logging.log4j.core.LogEvent;
 import java.io.File;
 
 public class TestLogger {
-
-    private static final String PASSED_TEST_PATTERN = "Test is finished SUCCESSFULLY";
-    private static final String FAILED_TEST_PATTERN = "Test is finished with %s UNCRITICAL errors:\n%s";
-    private static final String FATAL_TEST_PATTERN = "Test is finished with %s FATAL error:\n%s\n And contains %s UNCRITICAL errors:\n%s";
-    private static final String NO_VALIDATIONS_IN_TEST = "Test doesn't contains any validation steps";
-    private static final String TEST_WAS_SKIPPED = "Test was skipped";
 
     @Getter
     private TestInfo testInfo;
@@ -40,7 +35,7 @@ public class TestLogger {
         testInfo.addRow(ReportRow.createReportRow(event, screenshot));
     }
 
-    private void log(LogLevels level, String info, File screenshot){
+    public void log(LogLevels level, String info, File screenshot){
         /*logger.*/log(level.getLevel(), info, screenshot);
     }
 
@@ -123,41 +118,36 @@ public class TestLogger {
         addTestFinalStatusToLog(screenshot, true);
     }
 
-    public void addTestFinalStatusToLog(File screenshot){
+    public void generateTestStatus(File screenshot){
+        addTestFinalStatusToLog(screenshot, true);
+    }
+
+    public void generateFailTestStatus(File screenshot){
         addTestFinalStatusToLog(screenshot, false);
     }
 
+    //todo need to add this Row as separate Info to the UI report (as first maybe)
     private void addTestFinalStatusToLog(File screenshot, boolean isLastStep) {
-        testInfo.setCaseFullyCompleted();
-        if (testInfo.testHasFatalRows()) {
-            String resultInfo = String.format(FATAL_TEST_PATTERN, testInfo.getCountOfFatalRows(), testInfo.getRowsAsString(LogLevels.FATAL),
-                    testInfo.getCountOfFailedRows(), testInfo.getRowsAsString(LogLevels.FAIL));
-            if(isLastStep)
-                FATAL(resultInfo, screenshot);
-            else
-                FAIL(resultInfo, screenshot);
-            testInfo.setFatalTestStatus();
-        }
-        else if (testInfo.testHasFailedRows()) {
-            String failInfo = String.format(FAILED_TEST_PATTERN, testInfo.getCountOfFailedRows(), testInfo.getRowsAsString(LogLevels.FAIL));
-            FAIL(failInfo, screenshot);
-            testInfo.setFailTestStatus();
-            throw new AssertionError(failInfo);
-        }
-        else if (testInfo.testHasSuccessRows()) {
-            SUCCESS(PASSED_TEST_PATTERN, screenshot);
-            testInfo.setSuccessTestStatus();
-        }
-        else if (!testInfo.getTestRows().isEmpty()) {
-            if(isLastStep)
-                FATAL(NO_VALIDATIONS_IN_TEST, screenshot);
-            else
-                FAIL(NO_VALIDATIONS_IN_TEST, screenshot);
-            testInfo.setFatalTestStatus();
-        }
-        else {
-            SYSTEM(TEST_WAS_SKIPPED);
-            testInfo.setSkippedTestStatus();
+        TestStatus testStatus = testInfo.generateFinalTestStatus();
+        String finalString = testInfo.getFinalStatusString();
+        switch (testStatus) {
+            case SUCCESS:
+                SUCCESS(finalString, screenshot);
+                break;
+            case FAIL:
+                 FAIL(finalString, screenshot);
+                 if(isLastStep)
+                     throw new AssertionError(finalString);
+                 break;
+            case FATAL:
+                log(LogLevels.FATAL, finalString, screenshot);
+                break;
+            case SKIPPED:
+                SYSTEM(finalString);
+                break;
+            case UNKNOWN:
+                FATAL(finalString);
+                break;
         }
     }
 

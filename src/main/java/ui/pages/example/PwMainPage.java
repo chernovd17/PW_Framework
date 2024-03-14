@@ -9,7 +9,7 @@ import java.time.Duration;
 
 public class PwMainPage extends BasePwPage {
 
-    private Element getStartedElement = new Element("Post", this, Loc.xpath(".//a[@class='getStarted_Sjon']"));
+    private final Element getStartedElement = new Element("Post", this, Loc.xpath(".//a[@class='getStarted_Sjon']"));
 
     public PwMainPage(BrowserContext context) {
         super("Playwright Main Page", context);

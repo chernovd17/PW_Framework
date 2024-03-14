@@ -26,7 +26,8 @@ public class SuiteInfo {
     private int countOfFailedTests = 0;
     private int countOfFatalTests = 0;
     private int countOfSkippedTests = 0;
-    private List<TestInfo> tests = new ArrayList<>();
+    private int countOfUnknownTests = 0;
+    private final List<TestInfo> tests = new ArrayList<>();
     private ITestContext context;
     
     private static SuiteInfo instance;
@@ -70,12 +71,16 @@ public class SuiteInfo {
         countOfSkippedTests++;
     }
 
+    public synchronized void addUnknown() {
+        countOfSkippedTests++;
+    }
+
     public void addTestInfo(TestInfo testInfo){
-        String status = testInfo.getTestStatus();
-        switch (status) {
-            case "PASSED" -> addSuccess();
-            case "FATAL" -> addFatal();
-            case "FAILED" -> addFailure();
+        switch (testInfo.getTestStatus()) {
+            case SUCCESS -> addSuccess();
+            case FATAL -> addFatal();
+            case FAIL -> addFailure();
+            case UNKNOWN -> addUnknown();
             default -> addSkipped();
         }
         synchronized (tests){

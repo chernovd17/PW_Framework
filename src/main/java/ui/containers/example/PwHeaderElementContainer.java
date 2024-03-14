@@ -1,5 +1,6 @@
 package ui.containers.example;
 
+import helpers.Validation;
 import ui.IWebContext;
 import ui.containers.BaseElementContainer;
 import ui.elements.Element;
@@ -17,6 +18,7 @@ public class PwHeaderElementContainer extends BaseElementContainer {
     }
 
     public PwInstallationPage openDocsPage() {
+        Validation.verifyTrue(docsElement.visible(), "Docs element is not displayed");
         docsElement.click();
         PwInstallationPage pwInstallationPage = new PwInstallationPage(this.getPwPage().context());
         pwInstallationPage.waitForOpening();

@@ -14,7 +14,7 @@ public class Input extends Element {
     }
 
     public void setText(String text) {
-        getPWLoc().fill(text);
+        fillText(text);
     }
 
     public String getValue() {

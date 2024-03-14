@@ -28,6 +28,6 @@ public class ExampleTest1 extends BaseTest {
 
         Validation.assertEquals("Test", "Test", "Test14");
 
-        addTestFinalStatusToLogInLastStep();
+        generateTestFinalStatus();
     }
 }

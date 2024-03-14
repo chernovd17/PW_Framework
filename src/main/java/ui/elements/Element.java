@@ -5,6 +5,7 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.TimeoutError;
 import com.microsoft.playwright.options.BoundingBox;
+import helpers.FileSystemHelper;
 import management.environment.DefaultEnvironment;
 import management.playwright.run_management.Sessions;
 import ui.IWebContext;
@@ -12,6 +13,7 @@ import ui.containers.BaseElementContainer;
 import ui.elements.locator.Loc;
 import ui.pages.BasePage;
 
+import java.io.File;
 import java.time.Duration;
 import java.util.function.BooleanSupplier;
 
@@ -51,38 +53,85 @@ public class Element {
     }
 
     public void click() {
+        //todo need to clarify how waitings work in playwright
+        // now it looks that defaultPageTimeout we can ignore only like below,
+        // but we can't set PageTimeout as 1 millis and wait element more than 1 millis
+        // 1 millisecond is too small for this case, so 2-3 seconds is the best option
+        waitAndClick(defaultElementDuration);
+    }
+
+    public void waitAndClick(Duration durationInSec) {
         ACTION(String.format("Click '%s'", name));
-        getPWLoc().click();
+        try {
+            getPWLoc().click(new Locator.ClickOptions().setTimeout(durationInSec.toMillis()));
+        } catch (Exception e){
+            logError(e.getMessage());
+        }
     }
 
     public void typeText(String text) {
         ACTION(String.format("Type Text '%s' in element '%s'", text, name));
-        getPWLoc().type(text);
+        getPWLoc().type(text, new Locator.TypeOptions().setTimeout(defaultElementDuration.toMillis()));
     }
 
     public void fillText(String text) {
-        //getLogger().info(String.format("Fill Text '%s' in element '%s'", text, name));
         ACTION(String.format("Fill Text '%s' in element '%s'", text, name));
+        try {
+            getPWLoc().fill(text, new Locator.FillOptions().setTimeout(defaultElementDuration.toMillis()));
+        } catch (Exception e){
+            logError(e.getMessage());
+        }
+    }
 
-        getPWLoc().fill(text);
+    private void logError(String message){
+        FATAL(String.format("FATAL error occurred with element '%s':\n%s", name, message), getPage().makeScreenshot(false));
+    }
+
+    public void makeScreenScreenshot(){
+        getPage().makeScreenshot(false);
+    }
+
+    public File makeScreenshot(){
+        byte[] buffer = getPWLoc().screenshot();
+        return FileSystemHelper.createScreenshotFile(buffer);
     }
 
     public void fillTextWithForce(String text) {
         ACTION(String.format("Fill Text '%s' in element '%s'", text, name));
-        getPWLoc().fill(text, new Locator.FillOptions().setForce(true));
+        try {
+            getPWLoc().fill(text, new Locator.FillOptions().setForce(true).setTimeout(defaultElementDuration.toMillis()));
+        } catch (Exception e){
+            logError(e.getMessage());
+        }
     }
 
     public String getText() {
         ACTION("Get text from Element '" + getLogicalName() + "'.");
-        return getPWLoc().innerText();
+        try {
+            return getPWLoc().innerText(new Locator.InnerTextOptions().setTimeout(defaultElementDuration.toMillis()));
+        } catch (Exception e){
+            logError(e.getMessage());
+        }
+        return null;
     }
 
     public String getProperty(String property) {
-        return getPWLoc().getAttribute(property);
+        try {
+            return getPWLoc().getAttribute(property, new Locator.GetAttributeOptions().setTimeout(defaultElementDuration.toMillis()));
+        } catch (Exception e){
+            logError(e.getMessage());
+        }
+        return null;
     }
 
     public boolean visible() {
-        return getPWLoc().isVisible();
+        try {
+            //works without waitings
+            return getPWLoc().isVisible(new Locator.IsVisibleOptions());
+        } catch (Exception e){
+            logError(e.getMessage());
+        }
+        return false;
     }
 
     public boolean notVisible() {
@@ -91,11 +140,21 @@ public class Element {
 
     public boolean waitForVisible(Duration timeout) {
         //page.getPwPage().waitForSelector(loc.toString());
-        return waitForCondition(() -> getPWLoc().isVisible(), timeout);
+        try {
+            return waitForCondition(() -> getPWLoc().isVisible(), timeout);
+        } catch (Exception e){
+            logError(e.getMessage());
+        }
+        return false;
     }
 
     public boolean waitForHidden(Duration timeout) {
-        return waitForCondition(() -> getPWLoc().isHidden(), timeout);
+        try {
+            return waitForCondition(() -> getPWLoc().isHidden(), timeout);
+        } catch (Exception e){
+            logError(e.getMessage());
+        }
+        return false;
     }
 
     public boolean waitForHidden() {
@@ -155,5 +214,17 @@ public class Element {
 
     protected void ACTION(String info) {
         Sessions.getCurrentSession().getLoggerSession().ACTION(info);
+    }
+
+    protected void FATAL(String info) {
+        Sessions.getCurrentSession().getLoggerSession().FATAL(info);
+    }
+
+    protected void ACTION(String info, File screenshot) {
+        Sessions.getCurrentSession().getLoggerSession().ACTION(info, screenshot);
+    }
+
+    protected void FATAL(String info, File screenshot) {
+        Sessions.getCurrentSession().getLoggerSession().FATAL(info, screenshot);
     }
 }

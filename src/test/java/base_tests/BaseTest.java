@@ -3,7 +3,7 @@ package base_tests;
 import logger_and_report.entities.SuiteInfo;
 import logger_and_report.withlog4j2.TestLogger;
 import helpers.FileSystemHelper;
-import management.environment.example.ExampleEnvironment;
+import management.environment.DefaultEnvironment;
 import management.playwright.BrowserManager;
 import management.playwright.run_management.Sessions;
 import org.testng.ITestContext;
@@ -28,14 +28,14 @@ public class BaseTest {
         Test annotation = method.getAnnotation(Test.class);
 
         Sessions.createSession(annotation);
-        getBrowserManager().navigate(ExampleEnvironment.get().getAppUrl());
+        getBrowserManager().navigate(DefaultEnvironment.get().getAppUrl());
         getLogger().getTestInfo().makeReportRowsActive();
     }
 
     @AfterMethod(alwaysRun = true)
     public void afterMethod(ITestContext context, Method method, Object[] params) {
-        if(!getLogger().getTestInfo().isCaseFullyCompleted())
-            getLogger().addTestFinalStatusToLog(getBrowserManager().makeScreenshot());
+        if(getLogger().getTestInfo().getTestStatus() == null)
+            getLogger().generateFailTestStatus(getBrowserManager().makeScreenshot());
         getLogger().getTestInfo().makeAfterTestRowsActive();
         suiteInfo.addTestInfo(getLogger().getTestInfo());
         Sessions.killCurrentSession();
@@ -57,8 +57,8 @@ public class BaseTest {
     }
 
     //only as last step for any testMethod
-    protected void addTestFinalStatusToLogInLastStep(){
-        getLogger().addTestFinalStatusToLogInLastStep(getBrowserManager().makeScreenshot());
+    protected void generateTestFinalStatus(){
+        getLogger().generateTestStatus(getBrowserManager().makeScreenshot());
     }
 
 }
