@@ -36,7 +36,8 @@ public class ExampleTest2 extends BaseTest {
 
         PwPagesPage pwPagesPage = pwInstallationPage.openPagesArticle();
 
-        Thread.sleep(1000);
+        boolean res = pwPagesPage.waitDocsDisappeared();
+
         generateTestFinalStatus();
     }
 }

@@ -29,9 +29,15 @@ public class TestLogger {
     public void addRow(LogEvent event) {
         Object[] parameters = event.getMessage().getParameters();
         File screenshot = null;
-        if (parameters != null && parameters.length > 0 && parameters[0] instanceof byte[] screenshotData) {
-            screenshot = FileSystemHelper.createScreenshotFile(screenshotData);
+        if (parameters != null && parameters.length > 0) {
+            if (parameters[0] instanceof File screenshotData)
+                screenshot = screenshotData;
+            else if (parameters[0] instanceof byte[] screenshotData)
+                screenshot = FileSystemHelper.createScreenshotFile(screenshotData);
+            else
+                SYSTEM("Incorrect Logger Parameter '" + parameters[0] + "'");//should never happen
         }
+
         testInfo.addRow(ReportRow.createReportRow(event, screenshot));
     }
 

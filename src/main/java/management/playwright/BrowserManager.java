@@ -89,7 +89,7 @@ public class BrowserManager {
 
     public File makeScreenshot(){
 
-        Page page = getContext().pages().getLast();//now I don't know how to get active/required window, so will take last
+        Page page = getContext().pages().getLast();//now I don't know how to get active/required window, so taking last
         byte[] buffer = page.screenshot(new Page.ScreenshotOptions().setFullPage(true));
         return FileSystemHelper.createScreenshotFile(buffer);
     }
