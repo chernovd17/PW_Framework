@@ -26,20 +26,21 @@ public class ReportRow {
     private LocalDateTime dateTime;
     private LogLevels logLevel;
     private String info;
-    private File screenshot;
+    private String screenshotPath;
 
-    private ReportRow(LogLevels infoType, String info, LocalDateTime dateTime, File screenshot){
+    private ReportRow(LogLevels infoType, String info, LocalDateTime dateTime, String screenshot){
         this.dateTime = dateTime;
         this.logLevel = infoType;
         this.info = info;
-        this.screenshot = screenshot;
+        this.screenshotPath = screenshot;
     }
 
     public static ReportRow createReportRow(LogEvent event, File screenshot){
         String info = event.getMessage().getFormattedMessage();
         Instant instant = Instant.ofEpochMilli(event.getTimeMillis());
         LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
-        return new ReportRow(getLogLevel(event), info, dateTime, screenshot);
+        var screenshotPath = screenshot == null ? null : screenshot.getPath();
+        return new ReportRow(getLogLevel(event), info, dateTime, screenshotPath);
     }
 
     private static LogLevels getLogLevel(LogEvent event){

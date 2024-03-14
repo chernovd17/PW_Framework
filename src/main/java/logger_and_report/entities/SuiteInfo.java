@@ -1,5 +1,6 @@
 package logger_and_report.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import helpers.FileSystemHelper;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,8 +29,11 @@ public class SuiteInfo {
     private int countOfSkippedTests = 0;
     private int countOfUnknownTests = 0;
     private final List<TestInfo> tests = new ArrayList<>();
+
+    @JsonIgnore
     private ITestContext context;
-    
+
+    @JsonIgnore
     private static SuiteInfo instance;
 
     private List<ReportRow> reportRows = new ArrayList<>();
@@ -45,6 +49,7 @@ public class SuiteInfo {
     public static SuiteInfo initSuite(ITestContext context) {
         if (instance == null) {
             instance = new SuiteInfo(context);
+            FileSystemHelper.upsertSuiteInfoFile(instance);
         }
         return instance;
     }
@@ -86,6 +91,7 @@ public class SuiteInfo {
         synchronized (tests){
             tests.add(testInfo);
         }
+        FileSystemHelper.upsertSuiteInfoFile(this);
     }
 
     public void print() {
@@ -120,5 +126,6 @@ public class SuiteInfo {
             screenshot = FileSystemHelper.createScreenshotFile(screenshotData);
         }
         reportRows.add(ReportRow.createReportRow(event, screenshot));
+        FileSystemHelper.upsertSuiteInfoFile(this);
     }
 }
