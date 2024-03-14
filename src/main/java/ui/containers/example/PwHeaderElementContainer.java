@@ -1,23 +1,24 @@
-package ui.blocks.example;
+package ui.containers.example;
 
-import com.microsoft.playwright.BrowserContext;
+import helpers.Validation;
 import ui.IWebContext;
-import ui.blocks.BaseBlock;
+import ui.containers.BaseElementContainer;
 import ui.elements.Element;
 import ui.elements.locator.Loc;
 import ui.pages.example.GitHubRepositoryPage;
 import ui.pages.example.docs_pages.PwInstallationPage;
 
-public class PwHeaderBlock extends BaseBlock {
+public class PwHeaderElementContainer extends BaseElementContainer {
 
     private Element docsElement = new Element("Docs", this, Loc.xpath(".//a[text()='Docs']"));
     private Element gitIcon = new Element("Git Icon", this, Loc.css("a[aria-label='GitHub repository']"));
 
-    public PwHeaderBlock(IWebContext parent) {
+    public PwHeaderElementContainer(IWebContext parent) {
         super("", parent, Loc.css("nav[aria-label='Main']"));
     }
 
     public PwInstallationPage openDocsPage() {
+        Validation.verifyTrue(docsElement.visible(), "Docs element is not displayed");
         docsElement.click();
         PwInstallationPage pwInstallationPage = new PwInstallationPage(this.getPwPage().context());
         pwInstallationPage.waitForOpening();

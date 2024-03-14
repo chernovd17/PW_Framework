@@ -3,17 +3,15 @@ package ui.pages;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.Logger;
+import management.environment.DefaultEnvironment;
 import ui.IWebContext;
-import ui.blocks.BaseBlock;
+import ui.containers.BaseElementContainer;
 
 import java.time.Duration;
 
-@Log4j2
 public abstract class BasePage implements IWebContext {
 
-    private Duration pageDuration = Duration.ofSeconds(90);
+    private Duration pageDuration = DefaultEnvironment.get().getNavigationPageTimeout();
     @Getter
     private String name;
     @Getter
@@ -47,12 +45,14 @@ public abstract class BasePage implements IWebContext {
         return this;
     }
 
-    public BaseBlock getComponent(){
+    public BaseElementContainer getContainer(){
         return null;
     }
 
-    protected Logger getLogger() {
-        return log;
+    //todo: need to learn more about this feature and how it works
+    public Object evaluate(String expression){
+        return getPwPage().evaluate(expression);
+
     }
 
 }

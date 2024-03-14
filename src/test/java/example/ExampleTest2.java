@@ -1,6 +1,8 @@
 package example;
 
-import org.testng.Assert;
+import base_tests.BaseTest;
+import helpers.Validation;
+import management.playwright.run_management.Sessions;
 import org.testng.annotations.Test;
 import ui.pages.example.GitHubRepositoryPage;
 import ui.pages.example.PwMainPage;
@@ -8,23 +10,33 @@ import ui.pages.example.docs_pages.PwInstallationPage;
 import ui.pages.example.docs_pages.PwPagesPage;
 
 
-public class ExampleTest2 extends BaseExampleTest {
+public class ExampleTest2 extends BaseTest {
 
     private static final String EXPECTED_VERSION = "v1.41.2";
     @Test
-    public void test(){
+    public void test() throws InterruptedException {
 
-        PwMainPage playwrightMainPage = new PwMainPage(browserManager.getBrowser().contexts().get(0));
+        PwMainPage playwrightMainPage = new PwMainPage(Sessions.getCurrentSession().getBrowserManager().getBrowser().contexts().getFirst());
         playwrightMainPage.waitForOpening();
 
         GitHubRepositoryPage gitHubRepositoryPage = playwrightMainPage.openGitHubRepository();
 
         String actual = gitHubRepositoryPage.getLastVersion();
-        Assert.assertEquals(actual, EXPECTED_VERSION);
+        Validation.verifyTrue(actual.equals(EXPECTED_VERSION), "Verify if Version is as expected21");
+        Validation.verifyTrue(actual.equals(EXPECTED_VERSION), "Verify if Version is as expected22");
+        Validation.verifyTrue(actual.equals(EXPECTED_VERSION), "Verify if Version is as expected23");
 
-        gitHubRepositoryPage = new GitHubRepositoryPage(browserManager.closeLastTab());
+        Thread.sleep(1231);
+        Validation.verifyTrue(actual.equals(EXPECTED_VERSION), "Verify if Version is as expected24");
+
+        //Validation.verifyTrue(false, "just false");
+
+        gitHubRepositoryPage = new GitHubRepositoryPage(Sessions.getCurrentSession().getBrowserManager().closeLastTab());
         PwInstallationPage pwInstallationPage = gitHubRepositoryPage.openDocsPage();
 
         PwPagesPage pwPagesPage = pwInstallationPage.openPagesArticle();
+
+        Thread.sleep(1000);
+        generateTestFinalStatus();
     }
 }

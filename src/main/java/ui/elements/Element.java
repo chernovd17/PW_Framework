@@ -5,23 +5,24 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.TimeoutError;
 import com.microsoft.playwright.options.BoundingBox;
-import lombok.extern.log4j.Log4j2;
+import helpers.FileSystemHelper;
 import management.environment.DefaultEnvironment;
-import org.apache.logging.log4j.Logger;
+import management.playwright.run_management.Sessions;
 import ui.IWebContext;
-import ui.blocks.BaseBlock;
+import ui.containers.BaseElementContainer;
 import ui.elements.locator.Loc;
 import ui.pages.BasePage;
 
+import java.io.File;
 import java.time.Duration;
 import java.util.function.BooleanSupplier;
 
-@Log4j2
 public class Element {
+
     public static final Duration defaultElementDuration = DefaultEnvironment.get().getElementTimeout();
     private String name;
     private BasePage page;
-    private BaseBlock parent;
+    private BaseElementContainer parent;
     private IWebContext context;
     private ElementHandle handle;
     private Loc loc;
@@ -31,12 +32,13 @@ public class Element {
         this(name, context, loc, false);
     }
 
-    /**ElementHandle works faster than toLocator() if we use some actions in a row , but toLocator finds element*/
+    /** ElementHandle works faster than toLocator() if we use some actions in a row with 1 element,
+     *  .toLocator() finds element for each action*/
     public Element(String name, IWebContext context, Loc loc, boolean handleInitialization) {
         this.name = name;
         this.context = context;
         this.page = context.getPage();
-        this.parent = context.getComponent();
+        this.parent = context.getContainer();
         this.loc = loc;
         this.pwLoc = getPWLoc();
         if(handleInitialization)
@@ -47,41 +49,89 @@ public class Element {
         if(parent == null)
             this.handle = page.getPwPage().querySelector(loc.toString());
         else
-            this.handle = parent.getComponentAsElement().getHandle().querySelector(loc.toString());
+            this.handle = parent.getContainerAsElement().getHandle().querySelector(loc.toString());
     }
 
     public void click() {
-        getLogger().info(String.format("Click '%s'", name));
-        //DefaultHelper.sleep(Duration.ofSeconds(2));
-        getPWLoc().click();
+        //todo need to clarify how waitings work in playwright
+        // now it looks that defaultPageTimeout we can ignore only like below,
+        // but we can't set PageTimeout as 1 millis and wait element more than 1 millis
+        // 1 millisecond is too small for this case, so 2-3 seconds is the best option
+        waitAndClick(defaultElementDuration);
+    }
+
+    public void waitAndClick(Duration durationInSec) {
+        ACTION(String.format("Click '%s'", name));
+        try {
+            getPWLoc().click(new Locator.ClickOptions().setTimeout(durationInSec.toMillis()));
+        } catch (Exception e){
+            logError(e.getMessage());
+        }
     }
 
     public void typeText(String text) {
-        getLogger().info(String.format("Type Text '%s' in element '%s'", text, name));
-        //DefaultHelper.sleep(Duration.ofSeconds(2));//
-        getPWLoc().type(text);
+        ACTION(String.format("Type Text '%s' in element '%s'", text, name));
+        getPWLoc().type(text, new Locator.TypeOptions().setTimeout(defaultElementDuration.toMillis()));
     }
 
     public void fillText(String text) {
-        getLogger().info(String.format("Fill Text '%s' in element '%s'", text, name));
-        getPWLoc().fill(text);
+        ACTION(String.format("Fill Text '%s' in element '%s'", text, name));
+        try {
+            getPWLoc().fill(text, new Locator.FillOptions().setTimeout(defaultElementDuration.toMillis()));
+        } catch (Exception e){
+            logError(e.getMessage());
+        }
+    }
+
+    private void logError(String message){
+        FATAL(String.format("FATAL error occurred with element '%s':\n%s", name, message), getPage().makeScreenshot(false));
+    }
+
+    public void makeScreenScreenshot(){
+        getPage().makeScreenshot(false);
+    }
+
+    public File makeScreenshot(){
+        byte[] buffer = getPWLoc().screenshot();
+        return FileSystemHelper.createScreenshotFile(buffer);
     }
 
     public void fillTextWithForce(String text) {
-        getLogger().info(String.format("Fill Text '%s' in element '%s'", text, name));
-        getPWLoc().fill(text, new Locator.FillOptions().setForce(true));
+        ACTION(String.format("Fill Text '%s' in element '%s'", text, name));
+        try {
+            getPWLoc().fill(text, new Locator.FillOptions().setForce(true).setTimeout(defaultElementDuration.toMillis()));
+        } catch (Exception e){
+            logError(e.getMessage());
+        }
     }
 
     public String getText() {
-        return getPWLoc().innerText();
+        ACTION("Get text from Element '" + getLogicalName() + "'.");
+        try {
+            return getPWLoc().innerText(new Locator.InnerTextOptions().setTimeout(defaultElementDuration.toMillis()));
+        } catch (Exception e){
+            logError(e.getMessage());
+        }
+        return null;
     }
 
     public String getProperty(String property) {
-        return getPWLoc().getAttribute(property);
+        try {
+            return getPWLoc().getAttribute(property, new Locator.GetAttributeOptions().setTimeout(defaultElementDuration.toMillis()));
+        } catch (Exception e){
+            logError(e.getMessage());
+        }
+        return null;
     }
 
     public boolean visible() {
-        return getPWLoc().isVisible();
+        try {
+            //works without waitings
+            return getPWLoc().isVisible(new Locator.IsVisibleOptions());
+        } catch (Exception e){
+            logError(e.getMessage());
+        }
+        return false;
     }
 
     public boolean notVisible() {
@@ -89,12 +139,22 @@ public class Element {
     }
 
     public boolean waitForVisible(Duration timeout) {
-        page.getPwPage().waitForSelector(loc.toString());
-        return waitForCondition(() -> getPWLoc().isVisible(), timeout);
+        //page.getPwPage().waitForSelector(loc.toString());
+        try {
+            return waitForCondition(() -> getPWLoc().isVisible(), timeout);
+        } catch (Exception e){
+            logError(e.getMessage());
+        }
+        return false;
     }
 
     public boolean waitForHidden(Duration timeout) {
-        return waitForCondition(() -> getPWLoc().isHidden(), timeout);
+        try {
+            return waitForCondition(() -> getPWLoc().isHidden(), timeout);
+        } catch (Exception e){
+            logError(e.getMessage());
+        }
+        return false;
     }
 
     public boolean waitForHidden() {
@@ -111,7 +171,7 @@ public class Element {
 
     protected Locator getPWLoc() {
         if(parent != null)
-            return parent.getComponentAsElement().getPWLoc().locator(loc.toString()).first();
+            return parent.getContainerAsElement().getPWLoc().locator(loc.toString()).first();
         else
             return page.getPwPage().locator(loc.toString()).first();//first() -- to ignore "Error: strict mode violation" when locator return more than 1 elements
     }
@@ -126,10 +186,6 @@ public class Element {
         } catch (TimeoutError ignore) {
             return false;
         }
-    }
-
-    protected Logger getLogger() {
-        return log;
     }
 
     public String getLogicalName() {
@@ -154,5 +210,21 @@ public class Element {
 
     public boolean waitForContainsText(String text) {
         return waitForCondition(() -> getPWLoc().innerText().contains(text), defaultElementDuration);
+    }
+
+    protected void ACTION(String info) {
+        Sessions.getCurrentSession().getLoggerSession().ACTION(info);
+    }
+
+    protected void FATAL(String info) {
+        Sessions.getCurrentSession().getLoggerSession().FATAL(info);
+    }
+
+    protected void ACTION(String info, File screenshot) {
+        Sessions.getCurrentSession().getLoggerSession().ACTION(info, screenshot);
+    }
+
+    protected void FATAL(String info, File screenshot) {
+        Sessions.getCurrentSession().getLoggerSession().FATAL(info, screenshot);
     }
 }
