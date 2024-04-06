@@ -46,4 +46,7 @@ public class DefaultEnvironment extends BaseEnv {
         return getOS().toLowerCase(Locale.ROOT).contains("mac");
     }
 
+    public boolean withVideo(){
+        return Boolean.parseBoolean(getProperty("video.recording"));
+    }
 }

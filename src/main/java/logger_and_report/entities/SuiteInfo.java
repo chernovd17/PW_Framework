@@ -1,6 +1,7 @@
 package logger_and_report.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import helpers.DateTimeSystemHelper;
 import helpers.FileSystemHelper;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,6 +45,10 @@ public class SuiteInfo {
         title = context.getName();
         startDateTime = LocalDateTime.now();
         allTestsCount = context.getAllTestMethods().length;
+    }
+
+    public String getStartDateTimeAsString() {
+        return DateTimeSystemHelper.convertDateTimeToString(startDateTime, DateTimeSystemHelper.DD_MM_YYYY_HH_MM_SS);
     }
 
     public static SuiteInfo initSuite(ITestContext context) {

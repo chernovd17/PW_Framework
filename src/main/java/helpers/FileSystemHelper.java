@@ -57,7 +57,7 @@ public class FileSystemHelper {
     }
 
     private static Path createUniqueSuiteFilePath(SuiteInfo suiteInfo){
-        String fileName = SUITE_INFO + suiteInfo.getStartDateTime() + JSON;
+        String fileName = SUITE_INFO + suiteInfo.getStartDateTimeAsString() + JSON;
         return Path.of(LoggerEnvironment.get().getLoggerSuiteInfoDirectory() + SLASH + fileName);
     }
 

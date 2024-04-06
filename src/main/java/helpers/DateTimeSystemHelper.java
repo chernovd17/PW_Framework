@@ -7,6 +7,8 @@ import java.time.format.DateTimeFormatter;
 public class DateTimeSystemHelper {
 
     public static final String SCREENSHOT_PATTERN = "dd-MM-yyyy_hh:mm:ss";
+    public static final String DD_MM_YYYY_HH_MM_SS = "dd-MM-yyyy'T'HH_mm_ss";
+
 
     public static String convertDateTimeToString(LocalDateTime localDateTime, String pattern){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);

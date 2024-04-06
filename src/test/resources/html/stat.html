@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STATISTICS</title>
+    <link rel="stylesheet" type="text/css" href="statistics.css"/>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 5px;
+            text-align: left;
+        }
+    </style>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<body>
+
+<div class="head">
+    <div class="system_info">
+        <h2>System Info</h2>
+        <table class="center">
+            <tr>
+                <th>OS</th>
+                <th>Windows</th>
+            </tr>
+            <tr>
+                <td>BROWSER</td>
+                <td>Chrome</td>
+            </tr>
+            <tr>
+                <td>Start DateTime</td>
+                <td>10.11.2023 10:11:13</td>
+            </tr>
+            <tr>
+                <td>End DateTime</td>
+                <td>10.11.2023 10:23:00</td>
+            </tr>
+            <tr>
+                <td>DURATION</td>
+                <td>00:12:13</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="additional_info">
+        <h2>Additional Info</h2>
+        <table class="center">
+            <tr>
+                <td>Average Test Duration</td>
+                <td>00:03:12</td>
+            </tr>
+            <tr>
+                <td>The longest Test</td>
+                <td>test2, (add duration)</td>
+            </tr>
+            <tr>
+                <td>Linked Bugs</td>
+                <td>Jira-01, Jira-02, Jira-12</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="statistics">
+    <h2>Statistics</h2>
+    <div id="chart_statistics">
+        <table style="width:100%">
+            <tr>
+                <td id="chart" class="center">
+                    <canvas id="myChart" style="width:100%;max-width:1000px"></canvas>
+                    <script>
+                        const xValues = ["PASSED", "FAILED", "FATAL", "SKIPPED"];
+                        const yValues = [55, 49, 44, 24];
+                        const total = 55+49+44+24;
+                        for (let i = 0; i < xValues.length; i++) {
+                            xValues[i] += " " +yValues[i];
+                        }
+                        const barColors = [
+                          "#006400",
+                          "#FFD700",
+                          "#A30000",
+                          "#D3D3D3",
+                        ];
+
+                        new Chart("myChart", {
+                          type: "pie",
+                          data: {
+                            labels: xValues,
+                            percents: yValues,
+                            datasets: [{
+                              backgroundColor: barColors,
+                              data: yValues
+                            }]
+                          },
+                          options: {
+                            title: {
+                              padding: 0,
+                              display: true,
+                              text: "Number of tests " + total
+                            }
+                          }
+                        });
+                    </script>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>

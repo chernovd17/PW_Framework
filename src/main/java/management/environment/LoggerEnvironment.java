@@ -10,6 +10,7 @@ public class LoggerEnvironment extends BaseEnv {
     private String loggerDirectory;
     private String loggerScreenshotsDirectory;
     private String loggerSuiteInfoDirectory;
+    private String loggerVideoDirectory;
 
     protected LoggerEnvironment() {
         super("/properties/logger.properties");
@@ -17,6 +18,7 @@ public class LoggerEnvironment extends BaseEnv {
         loggerDirectory = getProperty("logger.main_folder");
         loggerScreenshotsDirectory = getProperty("logger.screenshots_folder");
         loggerSuiteInfoDirectory = getProperty("logger.suite_folder");
+        loggerVideoDirectory = getProperty("logger.video_folder");
     }
 
     public static LoggerEnvironment get() {

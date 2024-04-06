@@ -6,9 +6,11 @@ import com.microsoft.playwright.options.Cookie;
 import helpers.FileSystemHelper;
 import lombok.Getter;
 import management.environment.DefaultEnvironment;
+import management.environment.LoggerEnvironment;
 import management.playwright.run_management.Sessions;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.List;
 
 
@@ -47,8 +49,17 @@ public class BrowserManager {
     private void initContext(){
         browser = browserType.launch(options);
 
-        Browser.NewContextOptions opt = new Browser.NewContextOptions().setViewportSize(null).setLocale("en-GB");
+        Browser.NewContextOptions opt = initContextOptions();
         context = browser.newContext(opt);
+    }
+
+    public Browser.NewContextOptions initContextOptions(){
+        Browser.NewContextOptions opt = new Browser.NewContextOptions().setViewportSize(null).setLocale("en-GB");
+        if(DefaultEnvironment.get().withVideo()) {
+            opt.setRecordVideoDir((Paths.get(LoggerEnvironment.get().getLoggerVideoDirectory())));
+            opt.setRecordVideoSize(640, 480);
+        }
+        return opt;
     }
 
     public synchronized void navigate(String appUrl){
