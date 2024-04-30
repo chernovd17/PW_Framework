@@ -7,13 +7,12 @@ import management.playwright.BrowserManager;
 import org.testng.annotations.Test;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class Sessions {
 
     private final static List<TestSession> sessions = new ArrayList<>();
+    public final static Set<String> uniqueSessionsIds = new HashSet<>();
 
     public static synchronized void createSession(Test annotation){
 
@@ -27,6 +26,7 @@ public class Sessions {
         TestLogger logger = new TestLogger(annotation);
         TestSession session = new TestSession(localBrowserManager, logger, Thread.currentThread().threadId());
         sessions.add(session);
+        uniqueSessionsIds.add(String.valueOf(session.getThreadId()));
     }
 
     public static synchronized TestSession getCurrentSession() {
@@ -58,6 +58,10 @@ public class Sessions {
             session.getLoggerSession().getTestInfo().setEndDateTime(LocalDateTime.now());
         }
         sessions.clear();
+    }
+
+    public static int getCountOfUniqueSessions() {
+        return uniqueSessionsIds.size();
     }
 
     private static boolean sessionsExist() {

@@ -5,12 +5,14 @@ import helpers.DateTimeSystemHelper;
 import helpers.FileSystemHelper;
 import lombok.Getter;
 import lombok.Setter;
+import management.environment.DefaultEnvironment;
 import org.apache.logging.log4j.core.LogEvent;
 import org.testng.ITestContext;
 
 import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,10 @@ public class SuiteInfo {
 
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
+    private Duration duration;
+    private String operationSystem;
+    private String browser;
+    private int countOfThreads;
     private int countOfPassedTests = 0;
     private int countOfFailedTests = 0;
     private int countOfFatalTests = 0;
@@ -42,13 +48,15 @@ public class SuiteInfo {
 
     private SuiteInfo(ITestContext context){
         this.context = context;
-        title = context.getName();
         startDateTime = LocalDateTime.now();
-        allTestsCount = context.getAllTestMethods().length;
+        allTestsCount = context.getAllTestMethods().length;//doesn't work
+        title = FileSystemHelper.SUITE_INFO + getStartDateTimeAsString() + FileSystemHelper.JSON;
+        operationSystem = System.getProperty("os.name");
+        browser = DefaultEnvironment.get().getBrowserName();
     }
 
     public String getStartDateTimeAsString() {
-        return DateTimeSystemHelper.convertDateTimeToString(startDateTime, DateTimeSystemHelper.DD_MM_YYYY_HH_MM_SS);
+        return DateTimeSystemHelper.convertDateTimeToString(startDateTime, DateTimeSystemHelper.YYYY_MM_DD_HH_MM_SS);
     }
 
     public static SuiteInfo initSuite(ITestContext context) {
@@ -115,13 +123,18 @@ public class SuiteInfo {
 
     private String calculateDuration(){
         endDateTime = LocalDateTime.now();
-        Duration duration = Duration.between(startDateTime, endDateTime);
+        duration = Duration.between(startDateTime, endDateTime);
         long days = duration.toDays();
         long hours = duration.toHours() % 24;
         long minutes = duration.toMinutes() % 60;
         long seconds = duration.getSeconds() % 60;
 
         return days + " days, " + hours + " hours, " + minutes + " minutes, " + seconds + " seconds";
+    }
+
+    public void setEndDateTimeAndDuration() {
+        endDateTime = LocalDateTime.now();
+        duration = Duration.between(startDateTime, endDateTime);
     }
 
     public void addRow(LogEvent event) {

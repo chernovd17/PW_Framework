@@ -13,8 +13,8 @@ import ui.pages.example.docs_pages.PwPagesPage;
 public class ExampleTest2 extends BaseTest {
 
     private static final String EXPECTED_VERSION = "v1.41.2";
-    @Test
-    public void test() throws InterruptedException {
+    @Test(testName = "test2", description = "descr2")
+    public void test2() throws InterruptedException {
 
         PwMainPage playwrightMainPage = new PwMainPage(Sessions.getCurrentSession().getBrowserManager().getBrowser().contexts().getFirst());
         playwrightMainPage.waitForOpening();
@@ -26,7 +26,6 @@ public class ExampleTest2 extends BaseTest {
         Validation.verifyTrue(actual.equals(EXPECTED_VERSION), "Verify if Version is as expected22");
         Validation.verifyTrue(actual.equals(EXPECTED_VERSION), "Verify if Version is as expected23");
 
-        Thread.sleep(1231);
         Validation.verifyTrue(actual.equals(EXPECTED_VERSION), "Verify if Version is as expected24");
 
         //Validation.verifyTrue(false, "just false");

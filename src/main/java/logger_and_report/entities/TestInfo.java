@@ -1,13 +1,17 @@
 package logger_and_report.entities;
 
+import helpers.FileSystemHelper;
 import lombok.Getter;
 import lombok.Setter;
+import management.environment.LoggerEnvironment;
 import org.testng.annotations.Test;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static helpers.FileSystemHelper.SLASH;
 
 @Setter
 @Getter
@@ -18,7 +22,7 @@ public class TestInfo {
     private static final String NO_VALIDATIONS_IN_TEST = "Test doesn't contains any validation steps";
     private static final String TEST_WAS_SKIPPED = "Test was skipped";
 
-    private String title;
+    private String title;//the same as json-file name
     private String description;
     private String comment;
     private String bug;
@@ -33,12 +37,14 @@ public class TestInfo {
     private boolean isCaseFullyCompleted = false;//true if test has reached the end of case
     private Test testAnnotation;
     private String finalStatusString;
+    private String screenshotFolder;
 
     public TestInfo(Test testAnnotation){
         this.testAnnotation = testAnnotation;
         title = testAnnotation.testName();
         description = testAnnotation.description();
         startDateTime = LocalDateTime.now();
+        screenshotFolder = FileSystemHelper.createScreenshotFilePath(title);
         makeBeforeTestRowsActive();
     }
 

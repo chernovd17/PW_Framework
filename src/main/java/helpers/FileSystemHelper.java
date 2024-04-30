@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import logger_and_report.entities.SuiteInfo;
 import management.environment.LoggerEnvironment;
+import management.playwright.run_management.Sessions;
 import org.apache.commons.lang3.NotImplementedException;
 
 import java.io.File;
@@ -43,7 +44,7 @@ public class FileSystemHelper {
     private static String createUniqueScreenshotFilePath(){
         long timeStamp = System.currentTimeMillis();
         String fileName = SCREENSHOT + timeStamp + PNG;
-        return LoggerEnvironment.get().getLoggerScreenshotsDirectory() + SLASH + fileName;
+        return Sessions.getCurrentSession().getLoggerSession().getTestInfo().getScreenshotFolder() + SLASH + fileName;
     }
 
     public static void upsertSuiteInfoFile(SuiteInfo suiteInfo)  {
@@ -57,7 +58,7 @@ public class FileSystemHelper {
     }
 
     private static Path createUniqueSuiteFilePath(SuiteInfo suiteInfo){
-        String fileName = SUITE_INFO + suiteInfo.getStartDateTimeAsString() + JSON;
+        String fileName = suiteInfo.getTitle();
         return Path.of(LoggerEnvironment.get().getLoggerSuiteInfoDirectory() + SLASH + fileName);
     }
 
@@ -82,6 +83,12 @@ public class FileSystemHelper {
             createDirectoryIfNeeded(LoggerEnvironment.get().getLoggerSuiteInfoDirectory());
         }
         isLoggerDirectoriesExisted = true;
+    }
+
+    public static String createScreenshotFilePath(String fileName) {
+        String path = LoggerEnvironment.get().getLoggerScreenshotsDirectory() + SLASH + fileName + System.currentTimeMillis();
+        createDirectoryIfNeeded(path);
+        return path;
     }
 
 }
