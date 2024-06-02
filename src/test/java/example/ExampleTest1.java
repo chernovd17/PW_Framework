@@ -11,7 +11,7 @@ import ui.pages.example.docs_pages.PwPagesPage;
 
 public class ExampleTest1 extends BaseTest {
 
-    @Test(testName = "TestNName", description = "descr")
+    @Test(testName = "test123445", description = "descr")
     public void test1(){
 
         PwMainPage playwrightMainPage = new PwMainPage(Sessions.getCurrentSession().getBrowserManager().getBrowser().contexts().getFirst());

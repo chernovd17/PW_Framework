@@ -3,15 +3,12 @@ package logger_and_report.entities;
 import helpers.FileSystemHelper;
 import lombok.Getter;
 import lombok.Setter;
-import management.environment.LoggerEnvironment;
 import org.testng.annotations.Test;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static helpers.FileSystemHelper.SLASH;
 
 @Setter
 @Getter
@@ -44,7 +41,7 @@ public class TestInfo {
         title = testAnnotation.testName();
         description = testAnnotation.description();
         startDateTime = LocalDateTime.now();
-        screenshotFolder = FileSystemHelper.createScreenshotFilePath(title);
+        screenshotFolder = FileSystemHelper.createScreenshotFolderPath(title);
         makeBeforeTestRowsActive();
     }
 

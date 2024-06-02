@@ -1,10 +1,7 @@
 package logger_and_report.withlog4j2;
 
-import logger_and_report.entities.LogLevels;
-import logger_and_report.entities.ReportRow;
-import logger_and_report.entities.TestInfo;
+import logger_and_report.entities.*;
 import helpers.FileSystemHelper;
-import logger_and_report.entities.TestStatus;
 import lombok.Getter;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -23,6 +20,7 @@ public class TestLogger {
     public TestLogger(Test annotation){
         testInfo = new TestInfo(annotation);
         logger = LogManager.getLogger(CustomUIAppender.class);
+        SuitesFilesManagement.updateSuitesFiles();
     }
 
 

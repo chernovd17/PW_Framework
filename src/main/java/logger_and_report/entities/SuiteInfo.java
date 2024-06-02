@@ -105,6 +105,7 @@ public class SuiteInfo {
             tests.add(testInfo);
         }
         FileSystemHelper.upsertSuiteInfoFile(this);
+        SuitesFilesManagement.updateSuitesFiles();
     }
 
     public void print() {

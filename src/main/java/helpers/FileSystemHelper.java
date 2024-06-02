@@ -65,14 +65,8 @@ public class FileSystemHelper {
     public static void createDirectoryIfNeeded(String path){
         File directory = new File(path);
         if (!directory.exists()) {
-            if (directory.mkdirs())
-                //log.log(LogLevels.SYSTEM.getLevel(), "Directory '" + path + "' was created successfully.");
-                System.out.println();
-            else {
-                //log.log(LogLevels.FATAL.getLevel(), "Failed to create directory '" + path + "'.");
-                System.out.println();
-                new Error("Failed to create directory.");
-            }
+            if (!directory.mkdirs())
+                Sessions.getCurrentSession().getLoggerSession().FATAL("Failed to create directory '" + path + "'.");
         }
     }
 
@@ -85,10 +79,23 @@ public class FileSystemHelper {
         isLoggerDirectoriesExisted = true;
     }
 
-    public static String createScreenshotFilePath(String fileName) {
-        String path = LoggerEnvironment.get().getLoggerScreenshotsDirectory() + SLASH + fileName + System.currentTimeMillis();
-        createDirectoryIfNeeded(path);
-        return path;
+    public static String createScreenshotFolderPath(String fileName) {
+        String path = LoggerEnvironment.get().getLoggerScreenshotsDirectory() + SLASH + fileName;
+        String uniquePath = FileSystemHelper.createUniqueFolderPathWithPostfix(path);
+        createDirectoryIfNeeded(uniquePath);
+        return uniquePath;
     }
 
+    private static String createUniqueFolderPathWithPostfix(String path) {
+        String newFolderPath = path;
+        String postfixPattern = " (%d)";
+        File newFolder = new File(newFolderPath);;
+        int index = 1;
+        while(newFolder.exists()) {
+            newFolderPath = path + String.format(postfixPattern, index);
+            newFolder = new File(newFolderPath);
+            index++;
+        };
+        return newFolderPath;
+    }
 }
