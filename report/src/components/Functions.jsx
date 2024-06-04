@@ -73,7 +73,7 @@
     if(path === null || path === '') 
       return "";
     else {
-      return path.replace('report\\','');
+      return path.replace('report','');
     }
   }
 
