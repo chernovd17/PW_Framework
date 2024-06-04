@@ -47,7 +47,7 @@ export function Tests(props) {
                 Functions.splitByNewLine(item.info).map((inf, i) => (
                   <div className="g-0" key={i}>{inf}</div>
                 ))}</div>
-              <div className="col-2 border" >
+              <div className="col-2 border" style={{ maxHeight: "100px", overflow: "hidden" }}>
                   <ModalImage className="modal-image max_pic_height" small={Functions.removeRootFolderFromPath(item.screenshotPath)} medium={Functions.removeRootFolderFromPath(item.screenshotPath)}
                     hideDownload={true} />
                   {/*<img src="public\screenshot_1710589699534.png" alt="Descr" height="70px" width="150px"></img>

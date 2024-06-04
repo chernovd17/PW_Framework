@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  tabAside: 'tab1',
+  tabAside: 'tab3',
   tabMain: 'tab1',
   tabTest: 'tab1',
 };

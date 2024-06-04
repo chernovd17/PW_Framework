@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import * as Functions from "./Functions"
 
 function countPercentages(allTests, countOfRequiredTests) {
-  if(countOfRequiredTests === 0) 
+  if(countOfRequiredTests === 0)
     return 0;
   else {
     let percentage = ((countOfRequiredTests / allTests) * 100).toFixed(2);
@@ -84,7 +84,7 @@ export function Statistic() {
                   <span align="left">{info.operationSystem}</span>
                 </div>
               </div >
-  
+
               <div className="row ">
                 <div className="col fw-bold fs-10 " align="left">
                   <span align="center">Browser</span>
@@ -93,7 +93,7 @@ export function Statistic() {
                   <span align="left">{info.browser}</span>
                 </div>
               </div >
-  
+
               <div className="row ">
                 <div className="col fw-bold fs-10 " align="left">
                   <span align="center">Threads</span>
@@ -102,17 +102,17 @@ export function Statistic() {
                   <span align="left">{info.countOfThreads}</span>
                 </div>
               </div >
-  
+
               <div className="row ">
                 <div className="col fw-bold fs-10 " align="left">
                   <span align="center">Start Date-Time</span>
                 </div>
-                
+
                 <div className="col  fw-bold fs-10 ">
                   <span align="left">{Functions.dateTimeFormatter(info.startDateTime)}</span>
                 </div>
               </div >
-  
+
               <div className="row ">
                 <div className="col fw-bold fs-10 " align="left">
                   <span align="center">End Date Time</span>
@@ -121,7 +121,7 @@ export function Statistic() {
                   <span align="left">{Functions.dateTimeFormatter(info.endDateTime)}</span>
                 </div>
               </div >
-  
+
               <div className="row ">
                 <div className="col fw-bold fs-10 " align="left">
                   <span align="center">Suite Duration</span>
@@ -130,7 +130,7 @@ export function Statistic() {
                   <span align="left">{Functions.convertSecondsToTime(seconds)}</span>
                 </div>
               </div >
-  
+
               <div className="row ">
                 <div className="col fw-bold fs-10 " align="left">
                   <span align="center">Avg. test duration</span>
