@@ -49,3 +49,5 @@ export function getAllSkippedTests(fileInfo) {
     const allWhichPassed = countOfPassedTests + countOfFailedTests + countOfFatalTests + countOfSkippedTests + countOfUnknownTests;
     return (allTestsCount !== allWhichPassed) ? allTestsCount - allWhichPassed : countOfSkippedTests
 }
+
+export const calculatePercentage = (numerator, denomination) => ((numerator / denomination) * 100).toFixed(2)

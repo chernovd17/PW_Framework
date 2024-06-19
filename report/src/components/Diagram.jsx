@@ -1,7 +1,7 @@
 import {useSelector} from 'react-redux'
 import {ArcElement, Chart as ChartJS, Legend, Tooltip} from "chart.js";
 import {Doughnut} from "react-chartjs-2";
-import {getAllSkippedTests} from "./Functions";
+import {calculatePercentage, getAllSkippedTests} from "./Functions";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -10,15 +10,11 @@ export function Diagram() {
     const {countOfPassedTests, countOfFailedTests, countOfFatalTests, countOfUnknownTests, allTestsCount} = fileInfo
     let skipped = getAllSkippedTests(fileInfo);
 
-    const countPercentOfTestsWithStatus = (countOfTests, allTestCount = allTestsCount) => {
-        return ((countOfTests / allTestCount) * 100).toFixed(2);
-    }
-
-    const passedPer = countPercentOfTestsWithStatus(countOfPassedTests);
-    const failedPer = countPercentOfTestsWithStatus(countOfFailedTests);
-    const fatalPer = countPercentOfTestsWithStatus(countOfFatalTests)
-    const skippedPer = countPercentOfTestsWithStatus(skipped);
-    const unknownPer = countPercentOfTestsWithStatus(countOfUnknownTests);
+    const passedPer = calculatePercentage(countOfPassedTests, allTestsCount);
+    const failedPer = calculatePercentage(countOfFailedTests, allTestsCount);
+    const fatalPer = calculatePercentage(countOfFatalTests, allTestsCount)
+    const skippedPer = calculatePercentage(skipped, allTestsCount);
+    const unknownPer = calculatePercentage(countOfUnknownTests, allTestsCount);
 
     let colors = ["#01a901", "#fce251", "#f61717"];
     let labels = ["PASSED " + countOfPassedTests, "FAILED " + countOfFailedTests, "FATAL " + countOfFatalTests];
