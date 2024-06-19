@@ -109,7 +109,7 @@ export function Statistic() {
                 </div>
 
                 <div className="col  fw-bold fs-10 ">
-                  <span align="left">{Functions.dateTimeFormatter(info.startDateTime)}</span>
+                  <span align="left">{Functions.convertDateTime(info.startDateTime)}</span>
                 </div>
               </div >
 
@@ -118,7 +118,7 @@ export function Statistic() {
                   <span align="center">End Date Time</span>
                 </div>
                 <div className="col  fw-bold fs-10 ">
-                  <span align="left">{Functions.dateTimeFormatter(info.endDateTime)}</span>
+                  <span align="left">{Functions.convertDateTime(info.endDateTime)}</span>
                 </div>
               </div >
 

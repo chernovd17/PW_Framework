@@ -40,7 +40,7 @@ export function Tests(props) {
                 </div>
                 <div className="small_text">
                   <div>{Functions.dateFormatter(item.dateTime)}</div>
-                  <div>{Functions.timeFormatter(item.dateTime)}</div>
+                  <div>{Functions.convertTime(item.dateTime)}</div>
                 </div>
               </div>
               <div className={`col-8 border fw-medium fs-5 ${Functions.addLevelColor(item.logLevel)}`}>{

@@ -1,92 +1,51 @@
+export const convertDateTime = dateTime => dateTime ? formatDateTime(dateTime) : "No date"
 
-  export function dateTimeFormatter(dateTime){
-    if (dateTime) {
-      const date = dateFormatter(dateTime);
-      const time = timeFormatter(dateTime);
-      const formattedDateTime = date + " " + time;
-      return formattedDateTime
-    } else {
-      return "No date"
-    }
-  }
+export const convertTime = dateTime => dateTime ? timeFormatter(dateTime) : "No time"
 
-  export function timeFormatter(dateTime){
-    if (dateTime) {
-      let hour = dateTime.hour.toString().padStart(2, '0');
-      let minute = dateTime.minute.toString().padStart(2, '0');
-      let second = dateTime.second.toString().padStart(2, '0');;
-      const formattedDate = `${hour}:${minute}:${second}`;
-      return formattedDate
-    } else{
-      return "No time"
-    }
-  }
+export const formatDateTime = dateTime => dateFormatter(dateTime) + " " + timeFormatter(dateTime)
 
-  export function dateFormatter(dateTime){
+export const timeFormatter = dateTime => convertToDate(dateTime)
+    .toLocaleTimeString('en-US', {hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false})
 
-    let year = dateTime.year.toString();
-    let month = dateTime.monthValue.toString().padStart(2, '0');
-    let day = dateTime.dayOfMonth.toString().padStart(2, '0');
+export const dateFormatter = dateTime => convertToDate(dateTime)
+    .toLocaleDateString('en-US', {day: "2-digit", month: "2-digit", year: "numeric"})
 
-    const formattedDate = `${day}.${month}.${year}`;
+export const convertToDate = dateTime =>
+    new Date(
+        dateTime.year,
+        dateTime.monthValue - 1,
+        dateTime.dayOfMonth,
+        dateTime.hour,
+        dateTime.minute,
+        dateTime.second,
+        0
+    )
 
-    return formattedDate
-  }
-
-  export function addLevelColor(item) {
-    let textColorClass = "text-black"; // Default color is black
-
-    if (item === "SUCCESS") {
-        textColorClass = "text-success"; // Green color for SUCCESS
-    } else if (item === "FAIL") {
-        textColorClass = "text-warning"; // Yellow color for FAIL
-    } else if (item === "FATAL") {
-        textColorClass = "text-danger"; // Red color for FATAL
-    } else if (item === "STEP") {
-      textColorClass = "text-primary"; // Light Blue color for STEP
-    } else if (item === "ACTION") {
-      textColorClass = "text-muted"; // Light Blue color for ACTION
+export function addLevelColor(item) {
+    const textColorMap = {
+        SUCCESS: "text-success", FAIL: "text-warning", FATAL: "text-danger", STEP: "text-primary", ACTION: "text-muted",
     }
 
-    return textColorClass;
-  }
+    return textColorMap[item] || "text-black"
+}
 
-  export function splitByNewLine(str) {
-    return str.split("\n");
-  }
+export const splitByNewLine = str => str.split("\n")
 
-  export function getAllFilesFromDirectory(directory){
-    var fs = require('fs');
-    var files = fs.readdirSync(directory);
-    return files;
-  }
+export const getAllFilesFromDirectory = directory => require('fs').readdirSync(directory)
 
-  export function convertSecondsToTime(duration){
-    const hours = Math.floor(duration / 3600);
-    const minutes = Math.floor((duration % 3600) / 60);
-    const seconds = Math.floor(duration % 60);
-    const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    return formattedTime
-  }
+export function convertSecondsToTime(duration) {
+    const hours = padNumber(Math.floor(duration / 3600))
+    const minutes = padNumber(Math.floor((duration % 3600) / 60))
+    const seconds = padNumber(Math.floor(duration % 60))
+    return `${hours}:${minutes}:${seconds}`;
+}
 
-  export function removeRootFolderFromPath(path){
-    if(path === null || path === '') 
-      return "";
-    else {
-      return path.replace('report','');
-    }
-  }
+export const padNumber = number => String(number).padStart(2, '0')
 
-  export function getAllSkippedTests(fileInfo){
-    const passed = fileInfo.countOfPassedTests;
-    const failed = fileInfo.countOfFailedTests;
-    const fatal = fileInfo.countOfFatalTests;
-    let skipped =fileInfo.countOfSkippedTests;
-    const unkown = fileInfo.countOfUnknownTests;
-    const allTestCount = fileInfo.allTestsCount;
-    const allWhichPassed = passed + failed + fatal + skipped + unkown;
-    if( allTestCount != allWhichPassed) {
-      skipped = allTestCount - allWhichPassed
-    }
-    return skipped;
-  }
+export const removeRootFolderFromPath = path => (path === null || path === '') ? "" : path.replace('report', '')
+
+export function getAllSkippedTests(fileInfo) {
+    const {countOfPassedTests, countOfFailedTests, countOfFatalTests, countOfUnknownTests, countOfSkippedTests, allTestsCount} = fileInfo
+    const allWhichPassed = countOfPassedTests + countOfFailedTests + countOfFatalTests + countOfSkippedTests + countOfUnknownTests;
+    return (allTestsCount !== allWhichPassed) ? allTestsCount - allWhichPassed : countOfSkippedTests
+}
