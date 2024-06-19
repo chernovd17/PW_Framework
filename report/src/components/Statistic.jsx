@@ -1,4 +1,4 @@
-import { Diagrama } from "./Diagrama"
+import { Diagram } from "./Diagram.jsx"
 import { useSelector, useDispatch } from 'react-redux'
 import * as Functions from "./Functions"
 
@@ -57,7 +57,7 @@ export function Statistic() {
         <div className="w-50">
           <h3 className="text-center text-uppercase">General stat</h3>
           <div className="w-75 h-100 mx-auto">
-            <Diagrama />
+            <Diagram />
           </div>
         </div>
 
@@ -71,8 +71,6 @@ export function Statistic() {
               {renderTestsStatRow("Fatal", countPercentages(allTests, info.countOfFatalTests))}
               {renderOptionalTestsStatRow("Skipped", countPercentages(allTests, skipped))}
               {renderOptionalTestsStatRow("Unknown", countPercentages(allTests, info.countOfUnknownTests))}
-
-
         </div>
           <div className="w-50">
               <h1 className="text-center text-uppercase">System Info</h1>
