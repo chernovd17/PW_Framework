@@ -84,14 +84,14 @@ export function Tests(props) {
   }
 
   function colorizeTestBtnTitle(test){
-    const status = test.testStatus;
-    if (status === 'SUCCESS') {
-      return 'success_text_color';
-    } else if (status === 'FAIL') {
-      return 'fail_text_color';
-    } else if (status === 'FATAL') {
-      return 'fatal_text_color';
-    }
+      const {testStatus} = test;
+      const colorMap = {
+          SUCCESS: 'success_text_color',
+          FAIL: 'fail_text_color',
+          FATAL: 'fatal_text_color',
+      };
+
+      return colorMap[testStatus]
   }
 
   function renderContent() {

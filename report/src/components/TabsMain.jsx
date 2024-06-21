@@ -19,7 +19,7 @@ export function TabsMain() {
         Passed
       </button>
       <button data-id="tab3" className={`nav-link fw-bold text-uppercase fs-3 ${activeTab === 'tab3' ? 'active' : ''}`} onClick={handleToggleTab}>
-        Faild
+        Failed
       </button>
       <button data-id="tab4" className={`nav-link fw-bold text-uppercase fs-3 ${activeTab === 'tab4' ? 'active' : ''}`} onClick={handleToggleTab}>
         Fatal

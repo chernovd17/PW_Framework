@@ -1,14 +1,12 @@
-import {useSelector} from 'react-redux'
 import {ArcElement, Chart as ChartJS, Legend, Tooltip} from "chart.js";
 import {Doughnut} from "react-chartjs-2";
-import {calculatePercentage, getAllSkippedTests} from "./Functions";
+import {calculatePercentage, getAllSkippedTests} from "../Functions.jsx";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export function Diagram() {
-    const fileInfo = useSelector(state => state.file.fileInfo)
-    const {countOfPassedTests, countOfFailedTests, countOfFatalTests, countOfUnknownTests, allTestsCount} = fileInfo
-    let skipped = getAllSkippedTests(fileInfo);
+export function Diagram({info}) {
+    const {countOfPassedTests, countOfFailedTests, countOfFatalTests, countOfUnknownTests, allTestsCount} = info
+    let skipped = getAllSkippedTests(info);
 
     const passedPer = calculatePercentage(countOfPassedTests, allTestsCount);
     const failedPer = calculatePercentage(countOfFailedTests, allTestsCount);
@@ -41,8 +39,11 @@ export function Diagram() {
     };
 
     return (
-        <Doughnut
-            data={pieChartData}
-        />
-    );
+        <div>
+            <h3 className="text-center text-uppercase">General stat</h3>
+            <div className="w-75 h-100 mx-auto">
+                <Doughnut data={pieChartData}/>
+            </div>
+        </div>
+    )
 }

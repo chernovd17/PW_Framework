@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useState, useEffect } from 'react';
 import { TabsAside } from "../components/TabsAside";
 import { TabsMain } from "../components/TabsMain";
-import { Statistic } from '../components/Statistic';
+import { Statistics } from '../components/statistics/Statistics.jsx';
 import { Tests } from "../components/Tests";
 import { Reports } from "../components/Reports";
 import { setFile, setFileList } from '../redux/file-slice';
@@ -31,7 +31,7 @@ export function Main() {
   function renderContentAside() {
     switch (activeTabAside) {
       case 'tab1':
-        return <Statistic />
+        return <Statistics info={fileInfo}/>
       case 'tab2':
         return <div className="w-100">
           <TabsMain />

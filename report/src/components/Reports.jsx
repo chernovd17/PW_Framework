@@ -7,7 +7,8 @@ export function Reports() {
   const active = useSelector(state => state.file.fileInfo.title)
 
   function handleClickFile(event) {
-    fileList.filter(file => file.title === event.target.dataset).forEach(file => dispatch(setFile(file)))
+      const { id } = event.target.dataset
+      fileList.filter(file =>  file.title === id).forEach(file => dispatch(setFile(file)))
   }
 
   return (
