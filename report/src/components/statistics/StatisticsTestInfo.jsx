@@ -1,4 +1,4 @@
-import {calculatePercentage, getAllSkippedTests} from "../Functions.jsx";
+import {calculatePercentage, getAllSkippedTests} from "../../functions/Functions.jsx";
 import {StatisticsInfoRow} from "./StatisticsInfoRow.jsx";
 
 export const StatisticsTestInfo = ({ info }) => {

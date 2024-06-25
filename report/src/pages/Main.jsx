@@ -4,7 +4,7 @@ import { TabsAside } from "../components/TabsAside";
 import { TabsMain } from "../components/TabsMain";
 import { Statistics } from '../components/statistics/Statistics.jsx';
 import { Tests } from "../components/Tests";
-import { Reports } from "../components/Reports";
+import { Reports } from "../components/reports/Reports.jsx";
 import { setFile, setFileList } from '../redux/file-slice';
 
 export function Main() {

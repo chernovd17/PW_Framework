@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 import { TabsTest } from "./TabsTest"
 import { useState } from 'react'
-import * as Functions from "./Functions"
+import * as Functions from "../functions/Functions.jsx"
 import ModalImage from "react-modal-image"
 import '../styles/Styles.css';
 

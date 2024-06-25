@@ -1,5 +1,5 @@
 import {StatisticsRow} from "./StatisticsRow.jsx";
-import {convertDateTime, convertSecondsToTime} from "../Functions.jsx";
+import {convertDateTime, convertSecondsToTime} from "../../functions/Functions.jsx";
 
 export const StatisticsSystemInfo = ({info}) => {
     const {

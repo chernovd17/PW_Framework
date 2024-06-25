@@ -1,6 +1,6 @@
 import {ArcElement, Chart as ChartJS, Legend, Tooltip} from "chart.js";
 import {Doughnut} from "react-chartjs-2";
-import {calculatePercentage, getAllSkippedTests} from "../Functions.jsx";
+import {calculatePercentage, getAllSkippedTests} from "../../functions/Functions.jsx";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
