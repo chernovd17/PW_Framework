@@ -1,11 +1,11 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { useState, useEffect } from 'react';
-import { TabsAside } from "../components/TabsAside";
-import { TabsMain } from "../components/TabsMain";
+import { useEffect } from 'react';
+import { TabsAside } from "../components/tabs/aside/TabsAside.jsx";
+import { TabsMain } from "../components/tabs/main/TabsMain.jsx";
 import { Statistics } from '../components/statistics/Statistics.jsx';
 import { Tests } from "../components/Tests";
 import { Reports } from "../components/reports/Reports.jsx";
-import { setFile, setFileList } from '../redux/file-slice';
+import { setFileList } from '../redux/file-slice';
 
 export function Main() {
   const dispatch = useDispatch()

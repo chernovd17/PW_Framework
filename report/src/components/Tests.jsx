@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import { TabsTest } from "./TabsTest"
+import { TabsTest } from "./tabs/test/TabsTest.jsx"
 import { useState } from 'react'
 import * as Functions from "../functions/Functions.jsx"
 import ModalImage from "react-modal-image"
@@ -112,7 +112,7 @@ export function Tests(props) {
                 <div className='w-25'>
                   <div className="fs-4 fw-bold" align="center">Info</div>
                   <div className="row ">
-                    <div className="col fw-bold fs-10 " align="right">
+                    <div className="col fw-bold fs-10" align="right">
                       <span align="right">Test Name</span>
                     </div>
                     <div className="col  fw-bold fs-10">
@@ -121,7 +121,7 @@ export function Tests(props) {
                   </div>
 
                   <div className="row ">
-                    <div className="col fw-bold fs-10 " align="right">
+                    <div className="col fw-bold fs-10" align="right">
                       <span align="right">Description</span>
                     </div>
                     <div className="col  fw-bold fs-10">
@@ -130,7 +130,7 @@ export function Tests(props) {
                   </div>
 
                   <div className="row ">
-                    <div className="col fw-bold fs-10 " align="right">
+                    <div className="col fw-bold fs-10" align="right">
                       <span align="right">Link</span>
                     </div>
                     <div className="col  fw-bold fs-10">
@@ -139,7 +139,7 @@ export function Tests(props) {
                   </div>
 
                   <div className="row ">
-                    <div className="col fw-bold fs-10 " align="right">
+                    <div className="col fw-bold fs-10" align="right">
                       <span align="right">Duration</span>
                     </div>
                     <div className="col  fw-bold fs-10">
@@ -147,7 +147,7 @@ export function Tests(props) {
                     </div>
                   </div>
                   <div className="row ">
-                    <div className="col fw-bold fs-10 " align="right">
+                    <div className="col fw-bold fs-10" align="right">
                       <span align="right">Bugs</span>
                     </div>
                     <div className="col  fw-bold fs-10">

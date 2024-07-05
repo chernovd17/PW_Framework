@@ -10,7 +10,7 @@ export const TabsSlice = createSlice({
   name: 'tabs',
   initialState,
   reducers: {
-    setTabsAisde: (state, action) => {
+    setTabsAside: (state, action) => {
       state.tabAside = action.payload;
     },
     setTabsMain: (state, action) => {
@@ -22,5 +22,5 @@ export const TabsSlice = createSlice({
   },
 });
 
-export const { setTabsAisde, setTabsMain, setTabsTest } = TabsSlice.actions;
+export const { setTabsAside, setTabsMain, setTabsTest } = TabsSlice.actions;
 export const tabsReducer = TabsSlice.reducer;
