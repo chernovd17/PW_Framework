@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { TabsAside } from "../components/tabs/aside/TabsAside.jsx";
 import { TabsMain } from "../components/tabs/main/TabsMain.jsx";
 import { Statistics } from '../components/statistics/Statistics.jsx';
-import { Tests } from "../components/Tests";
+import { Tests } from "../components/test/Tests.jsx";
 import { Reports } from "../components/reports/Reports.jsx";
 import { setFileList } from '../redux/file-slice';
 
@@ -46,9 +46,9 @@ export function Main() {
 
   function renderContentMain() {
     if (testsAll) {
-      const testsPassed = testsAll.filter(test => test.testStatus == 'SUCCESS')
-      const testsFailed = testsAll.filter(test => test.testStatus == 'FAIL')
-      const testsFatal = testsAll.filter(test => test.testStatus == 'FATAL')
+      const testsPassed = testsAll.filter(test => test.testStatus === 'SUCCESS')
+      const testsFailed = testsAll.filter(test => test.testStatus === 'FAIL')
+      const testsFatal = testsAll.filter(test => test.testStatus === 'FATAL')
       switch (activeTabMain) {
         case 'tab1':
           return <Tests tests={testsAll} />
@@ -62,7 +62,6 @@ export function Main() {
           return null
       }
     }
-    return
   }
 
   return (

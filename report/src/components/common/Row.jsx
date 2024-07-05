@@ -1,6 +1,6 @@
-export const StatisticsRow = ({name, value}) => {
+export const Row = ({name, value}) => {
     return (
-        <div className="row ">
+        <div className="row">
             <div className="col fw-bold fs-10" align="left">
                 <span align="center">{name}</span>
             </div>
