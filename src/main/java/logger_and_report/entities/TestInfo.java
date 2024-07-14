@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 @Getter
 public class TestInfo {
     private static final String PASSED_TEST_PATTERN = "Test is finished SUCCESSFULLY";
-    private static final String FAILED_TEST_PATTERN = "Test is finished with %s UNCRITICAL errors:\n%s";
-    private static final String FATAL_TEST_PATTERN = "Test is finished with %s FATAL error:\n%s\n And contains %s UNCRITICAL errors:\n%s";
+    private static final String FAILED_TEST_PATTERN = "Test is finished with %s UNCRITICAL error(s):\n%s";
+    private static final String FATAL_TEST_PATTERN = "Test is finished with %s FATAL error(s):\n%s\n and contains %s UNCRITICAL errors:\n%s";
     private static final String NO_VALIDATIONS_IN_TEST = "Test doesn't contains any validation steps";
     private static final String TEST_WAS_SKIPPED = "Test was skipped";
 

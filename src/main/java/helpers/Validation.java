@@ -30,12 +30,12 @@ public class Validation {
     }
 
     public static void assertEquals(Object actual, Object expected, String message) {
-        String msg = "ASSERT: " + message;
+        String msg = String.format("ASSERT: %s\nActual: %s\nExpected: %s",message, actual, expected);
         equalsValidation(actual, expected, msg, true);
     }
 
     public static void verifyEquals(Object actual, Object expected, String message) {
-        String msg = "VERIFY: " + message + "-- Actual: " + actual + "; Expected: " + expected;
+        String msg = String.format("VERIFY: %s\nActual: %s\nExpected: %s",message, actual, expected);
         equalsValidation(actual, expected, msg, false);
     }
 
@@ -44,11 +44,10 @@ public class Validation {
             Assert.assertEquals(actual, expected, message);
             Sessions.getCurrentSession().getLoggerSession().SUCCESS(message, makeScreenshot());
         } catch (AssertionError e) {
-            String msg = "       Act. Value: " + actual + "; Exp. Value: " + expected;
             if(isFatal)
-                Sessions.getCurrentSession().getLoggerSession().FATAL(msg, makeScreenshot());
+                Sessions.getCurrentSession().getLoggerSession().FATAL(message, makeScreenshot());
             else
-                Sessions.getCurrentSession().getLoggerSession().FAIL(msg, makeScreenshot());
+                Sessions.getCurrentSession().getLoggerSession().FAIL(message, makeScreenshot());
         }
     }
 

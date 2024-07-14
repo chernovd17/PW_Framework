@@ -17,18 +17,17 @@ export const TestInfo = ({test}) => {
     const testRows = testDataFetchers[activeTabTest]
 
     return test && (
-        <div className="w-75">
+        <div className="w-100">
             <div className='d-flex'>
-                <div className='w-25'>
-                    <div className="fs-4 fw-bold" align="center">Info</div>
+                <div className='w-100 '>
+                    <div className="fs-4 fw-bold " align="center">Info</div>
                     <Row name="Test Name" value={test.title}/>
                     <Row name="Description" value={test.description}/>
                     <Row name="Link" value="TR/TL Link"/>
                     <Row name="Duration" value="duration"/>
                     <Row name="Bugs" value={test.bug}/>
+                    <TestFinalStatus test={test}/>
                 </div>
-                <div className="w-25"></div>
-                <TestFinalStatus test={test}/>
             </div>
             <div>
                 <TabsTest/>
