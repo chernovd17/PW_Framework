@@ -1,6 +1,7 @@
 package ui.pages.example.docs_pages;
 
 import com.microsoft.playwright.BrowserContext;
+import helpers.Durations;
 import ui.containers.example.DocsLeftSideElementContainer;
 import ui.pages.BasePage;
 import ui.pages.example.BasePwPage;
@@ -24,6 +25,10 @@ public abstract class BaseDocsPage extends BasePwPage {
         PwPagesPage pwPagesPage = new PwPagesPage(this);
         pwPagesPage.waitForOpening();
         return pwPagesPage;
+    }
+
+    public boolean waitDocsDisappeared(){
+        return docsLeftSideBlock.getContainerAsElement().waitForHidden(Durations.THREE_SECONDS);
     }
 
 

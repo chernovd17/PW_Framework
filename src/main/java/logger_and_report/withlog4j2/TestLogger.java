@@ -1,10 +1,7 @@
 package logger_and_report.withlog4j2;
 
-import logger_and_report.entities.LogLevels;
-import logger_and_report.entities.ReportRow;
-import logger_and_report.entities.TestInfo;
+import logger_and_report.entities.*;
 import helpers.FileSystemHelper;
-import logger_and_report.entities.TestStatus;
 import lombok.Getter;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -23,15 +20,22 @@ public class TestLogger {
     public TestLogger(Test annotation){
         testInfo = new TestInfo(annotation);
         logger = LogManager.getLogger(CustomUIAppender.class);
+        SuitesFilesManagement.updateSuitesFiles();
     }
 
 
     public void addRow(LogEvent event) {
         Object[] parameters = event.getMessage().getParameters();
         File screenshot = null;
-        if (parameters != null && parameters.length > 0 && parameters[0] instanceof byte[] screenshotData) {
-            screenshot = FileSystemHelper.createScreenshotFile(screenshotData);
+        if (parameters != null && parameters.length > 0) {
+            if (parameters[0] instanceof File screenshotData)
+                screenshot = screenshotData;
+            else if (parameters[0] instanceof byte[] screenshotData)
+                screenshot = FileSystemHelper.createScreenshotFile(screenshotData);
+            else
+                SYSTEM("Incorrect Logger Parameter '" + parameters[0] + "'");//should never happen
         }
+
         testInfo.addRow(ReportRow.createReportRow(event, screenshot));
     }
 
@@ -128,6 +132,8 @@ public class TestLogger {
 
     //todo need to add this Row as separate Info to the UI report (as first maybe)
     private void addTestFinalStatusToLog(File screenshot, boolean isLastStep) {
+        if(isLastStep)
+            testInfo.setCaseFullyCompleted();
         TestStatus testStatus = testInfo.generateFinalTestStatus();
         String finalString = testInfo.getFinalStatusString();
         switch (testStatus) {

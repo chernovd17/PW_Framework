@@ -30,12 +30,12 @@ public class Validation {
     }
 
     public static void assertEquals(Object actual, Object expected, String message) {
-        String msg = "ASSERT: " + message + "\nActual value: " + actual + "\nExpected value: " + expected;
+        String msg = String.format("ASSERT: %s\nActual: %s\nExpected: %s",message, actual, expected);
         equalsValidation(actual, expected, msg, true);
     }
 
     public static void verifyEquals(Object actual, Object expected, String message) {
-        String msg = "VERIFY: " + message + "\nActual value: " + actual + "\nExpected value: " + expected;
+        String msg = String.format("VERIFY: %s\nActual: %s\nExpected: %s",message, actual, expected);
         equalsValidation(actual, expected, msg, false);
     }
 

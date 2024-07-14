@@ -1,0 +1,39 @@
+
+.small_text {
+    font-size: small;
+}
+
+.large_text {
+  font-size: x-large;
+}
+
+
+.modal-image {
+    max-width: 14%;
+    max-height: 98%;
+    background-color: black;
+  }
+
+.max_pic_height{
+  max-height: 20px;
+}
+
+.fail_text_color{
+  color :darkorange;
+}
+
+.fatal_text_color{
+  color :darkred;
+}
+
+.success_text_color{
+  color :darkgreen;
+}
+
+.skipped_text_color{
+  color : #C0C0C0;
+}
+
+.unknown_text_color{
+  color : #bdb76b;
+}

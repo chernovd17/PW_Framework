@@ -6,11 +6,13 @@ import helpers.FileSystemHelper;
 import management.environment.DefaultEnvironment;
 import management.playwright.BrowserManager;
 import management.playwright.run_management.Sessions;
+import org.testng.ISuite;
 import org.testng.ITestContext;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 
+//@Listeners({ISuiteLsntr.class})
 public class BaseTest {
 
     protected static SuiteInfo suiteInfo;
@@ -53,6 +55,10 @@ public class BaseTest {
     @AfterSuite(alwaysRun = true)
     protected void closeAllSession() {
         Sessions.killAllSessions();
+        suiteInfo.setEndDateTimeAndDuration();
+        suiteInfo.setCountOfThreads(Sessions.getCountOfUniqueSessions());
+        FileSystemHelper.upsertSuiteInfoFile(suiteInfo);
+
         System.out.println(suiteInfo.toString());
     }
 

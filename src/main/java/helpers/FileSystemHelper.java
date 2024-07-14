@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import logger_and_report.entities.SuiteInfo;
 import management.environment.LoggerEnvironment;
+import management.playwright.run_management.Sessions;
 import org.apache.commons.lang3.NotImplementedException;
 
 import java.io.File;
@@ -43,7 +44,7 @@ public class FileSystemHelper {
     private static String createUniqueScreenshotFilePath(){
         long timeStamp = System.currentTimeMillis();
         String fileName = SCREENSHOT + timeStamp + PNG;
-        return LoggerEnvironment.get().getLoggerScreenshotsDirectory() + SLASH + fileName;
+        return Sessions.getCurrentSession().getLoggerSession().getTestInfo().getScreenshotFolder() + SLASH + fileName;
     }
 
     public static void upsertSuiteInfoFile(SuiteInfo suiteInfo)  {
@@ -57,21 +58,15 @@ public class FileSystemHelper {
     }
 
     private static Path createUniqueSuiteFilePath(SuiteInfo suiteInfo){
-        String fileName = SUITE_INFO + suiteInfo.getStartDateTime() + JSON;
+        String fileName = suiteInfo.getTitle();
         return Path.of(LoggerEnvironment.get().getLoggerSuiteInfoDirectory() + SLASH + fileName);
     }
 
     public static void createDirectoryIfNeeded(String path){
         File directory = new File(path);
         if (!directory.exists()) {
-            if (directory.mkdirs())
-                //log.log(LogLevels.SYSTEM.getLevel(), "Directory '" + path + "' was created successfully.");
-                System.out.println();
-            else {
-                //log.log(LogLevels.FATAL.getLevel(), "Failed to create directory '" + path + "'.");
-                System.out.println();
-                new Error("Failed to create directory.");
-            }
+            if (!directory.mkdirs())
+                Sessions.getCurrentSession().getLoggerSession().FATAL("Failed to create directory '" + path + "'.");
         }
     }
 
@@ -84,4 +79,23 @@ public class FileSystemHelper {
         isLoggerDirectoriesExisted = true;
     }
 
+    public static String createScreenshotFolderPath(String fileName) {
+        String path = LoggerEnvironment.get().getLoggerScreenshotsDirectory() + SLASH + fileName;
+        String uniquePath = FileSystemHelper.createUniqueFolderPathWithPostfix(path);
+        createDirectoryIfNeeded(uniquePath);
+        return uniquePath;
+    }
+
+    private static String createUniqueFolderPathWithPostfix(String path) {
+        String newFolderPath = path;
+        String postfixPattern = " (%d)";
+        File newFolder = new File(newFolderPath);;
+        int index = 1;
+        while(newFolder.exists()) {
+            newFolderPath = path + String.format(postfixPattern, index);
+            newFolder = new File(newFolderPath);
+            index++;
+        };
+        return newFolderPath;
+    }
 }

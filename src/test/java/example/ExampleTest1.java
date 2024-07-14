@@ -11,7 +11,7 @@ import ui.pages.example.docs_pages.PwPagesPage;
 
 public class ExampleTest1 extends BaseTest {
 
-    @Test(testName = "TestNName", description = "descr")
+    @Test(testName = "Example Test", description = "Test Description")
     public void test(){
 
         PwMainPage playwrightMainPage = new PwMainPage(Sessions.getCurrentSession().getBrowserManager().getBrowser().contexts().getFirst());
@@ -22,11 +22,12 @@ public class ExampleTest1 extends BaseTest {
         PwPagesPage pwPagesPage = pwInstallationPage.openPagesArticle();
         pwPagesPage.waitForOpening();
 
-        Validation.verifyTrue(true, "Test11");
-        Validation.verifyEquals("Test", "Test", "Test12");
-        Validation.verifyEquals(123, 1234, "Test13");
+        Validation.verifyTrue(true, "Positive boolean non-critical verification");
+        Validation.verifyEquals("Test", "Test", "Positive non-critical equals verification");
+        Validation.assertEquals(123, 123, "Positive critical equals verification");
 
-        Validation.assertEquals("Test", "Test", "Test14");
+        Validation.verifyEquals("Actual Val", "Exp Value", "Negative non-critical equals verification");
+        Validation.assertTrue(false, "Negative boolean critical equals verification");
 
         generateTestFinalStatus();
     }

@@ -41,3 +41,7 @@ build/
 /allure-results/*
 /*.iml
 /target/*
+
+### logger ###
+report/logger/
+report/node_modules/

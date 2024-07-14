@@ -5,6 +5,8 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.TimeoutError;
 import com.microsoft.playwright.options.BoundingBox;
+import com.microsoft.playwright.options.WaitForSelectorState;
+import helpers.Durations;
 import helpers.FileSystemHelper;
 import management.environment.DefaultEnvironment;
 import management.playwright.run_management.Sessions;
@@ -19,7 +21,7 @@ import java.util.function.BooleanSupplier;
 
 public class Element {
 
-    public static final Duration defaultElementDuration = DefaultEnvironment.get().getElementTimeout();
+    public static final Duration defaultElementDuration = Durations.THIRTY_SECONDS;
     private String name;
     private BasePage page;
     private BaseElementContainer parent;
@@ -87,10 +89,6 @@ public class Element {
         FATAL(String.format("FATAL error occurred with element '%s':\n%s", name, message), getPage().makeScreenshot(false));
     }
 
-    public void makeScreenScreenshot(){
-        getPage().makeScreenshot(false);
-    }
-
     public File makeScreenshot(){
         byte[] buffer = getPWLoc().screenshot();
         return FileSystemHelper.createScreenshotFile(buffer);
@@ -139,22 +137,30 @@ public class Element {
     }
 
     public boolean waitForVisible(Duration timeout) {
-        //page.getPwPage().waitForSelector(loc.toString());
         try {
-            return waitForCondition(() -> getPWLoc().isVisible(), timeout);
+            getPWLoc().waitFor(new Locator.WaitForOptions()
+                    .setState(WaitForSelectorState.VISIBLE)
+                    .setTimeout(timeout.toMillis()));
+            return true;
+            //return waitForCondition(() -> getPWLoc().isVisible(), timeout);
         } catch (Exception e){
-            logError(e.getMessage());
+            return false;
+            //logError("Wait for Visible error: " + e.getMessage());
         }
-        return false;
     }
 
     public boolean waitForHidden(Duration timeout) {
         try {
-            return waitForCondition(() -> getPWLoc().isHidden(), timeout);
+            getPWLoc().isHidden(new Locator.IsHiddenOptions().setTimeout(timeout.toMillis()));
+            getPWLoc().waitFor(new Locator.WaitForOptions()
+                    .setState(WaitForSelectorState.HIDDEN)
+                    .setTimeout(timeout.toMillis()));
+            return true;
+            //return waitForCondition(() -> getPWLoc().isHidden(), timeout);
         } catch (Exception e){
-            logError(e.getMessage());
+            return false;
+            //logError("Wait for Hidden error: " + e.getMessage());
         }
-        return false;
     }
 
     public boolean waitForHidden() {
@@ -177,9 +183,8 @@ public class Element {
     }
 
     protected final boolean waitForCondition(BooleanSupplier condition, Duration timeout) {
-        if (timeout.toMillis() == 0) {
-            return condition.getAsBoolean();
-        }
+        if (timeout.toMillis() == 0)
+            FATAL("Incorrect Duration timeout for wait condition (impossible to use 0): " + timeout.toMillis());
         try {
             page.getPwPage().waitForCondition(condition, new Page.WaitForConditionOptions().setTimeout(timeout.toMillis()));
             return true;
