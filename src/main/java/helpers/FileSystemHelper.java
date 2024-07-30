@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import logger_and_report.entities.SuiteInfo;
 import management.environment.LoggerEnvironment;
 import management.playwright.run_management.Sessions;
+import management.selenium.sessions_management.SeleniumSessions;
 import org.apache.commons.lang3.NotImplementedException;
 
 import java.io.File;
@@ -32,7 +33,7 @@ public class FileSystemHelper {
 
         String path = createUniqueScreenshotFilePath();
 
-        File screenshotFile = new File(createUniqueScreenshotFilePath());
+        File screenshotFile = new File(path);
         try {
             Files.write(screenshotFile.toPath(), screenshot);
             return screenshotFile;
@@ -45,6 +46,25 @@ public class FileSystemHelper {
         long timeStamp = System.currentTimeMillis();
         String fileName = SCREENSHOT + timeStamp + PNG;
         return Sessions.getCurrentSession().getLoggerSession().getTestInfo().getScreenshotFolder() + SLASH + fileName;
+    }
+
+    private static String createSeleniumUniqueScreenshotFilePath(){
+        long timeStamp = System.currentTimeMillis();
+        String fileName = SCREENSHOT + timeStamp + PNG;
+        return SeleniumSessions.getCurrentSession().getLoggerSession().getTestInfo().getScreenshotFolder() + SLASH + fileName;
+    }
+
+    public static File createSeleniumScreenshotFile(byte[] screenshot) {
+
+        String path = createSeleniumUniqueScreenshotFilePath();
+
+        File screenshotFile = new File(path);
+        try {
+            Files.write(screenshotFile.toPath(), screenshot);
+            return screenshotFile;
+        } catch (java.io.IOException e) {
+            throw new NotImplementedException("Problem with file '" + path + "' creation.");
+        }
     }
 
     public static void upsertSuiteInfoFile(SuiteInfo suiteInfo)  {

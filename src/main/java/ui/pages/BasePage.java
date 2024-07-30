@@ -17,7 +17,7 @@ public abstract class BasePage implements IWebContext {
     @Getter
     private Page pwPage;
     @Getter
-    private BrowserContext pwContext;
+    private BrowserContext pwContext;//can be deleted
 
     public BasePage(String name, BrowserContext context){
         this.name = name;
@@ -52,7 +52,6 @@ public abstract class BasePage implements IWebContext {
     //todo: need to learn more about this feature and how it works
     public Object evaluate(String expression){
         return getPwPage().evaluate(expression);
-
     }
 
 }

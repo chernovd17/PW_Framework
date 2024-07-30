@@ -17,6 +17,10 @@ public abstract class BaseEnv {
     }
 
     public String getProperty(String propName) {
-        return defProp.getProperty(propName, System.getProperty(propName));//System.getProperty(propName) -- if need to use "-Dproperty=''"
+        String optionalValue = System.getProperty(propName);
+        if(optionalValue != null) {
+            return optionalValue;//returns -Dproperty
+        } else
+            return defProp.getProperty(propName, System.getProperty(propName));//returns default from property files
     }
 }

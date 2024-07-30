@@ -1,9 +1,10 @@
 package logger_and_report.withlog4j2;
 
-import helpers.FileSystemHelper;
 import logger_and_report.entities.SuiteInfo;
 import management.playwright.run_management.Sessions;
 import management.playwright.run_management.TestSession;
+import management.selenium.sessions_management.SeleniumSessions;
+import management.selenium.sessions_management.SeleniumTestSession;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
@@ -36,7 +37,7 @@ public class CustomUIAppender extends AbstractAppender {
 
     @Override
     public synchronized void append(LogEvent event) {
-        TestSession currentSession = Sessions.getCurrentSession();
+        SeleniumTestSession currentSession = SeleniumSessions.getCurrentSession();//TODO need to return TestSession currentSession = Sessions.getCurrentSession();
         if(currentSession != null)
             currentSession.getLoggerSession().addRow(event);
         else {
