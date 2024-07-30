@@ -1,13 +1,14 @@
-package management.rest_api.pojo;
+package management.selenium.rest_api.pojo;
 
 import lombok.*;
+import management.selenium.rest_api.dto.BasePojo;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserData {
+public class UserData extends BasePojo {
 
     private Integer id;
     private String email;

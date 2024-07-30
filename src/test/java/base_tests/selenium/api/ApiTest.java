@@ -1,13 +1,14 @@
 package base_tests.selenium.api;
 
-import helpers.Validation;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
-import management.rest_api.dto.UserDTO;
-import management.rest_api.pojo.UserData;
+import management.selenium.rest_api.BaseRestAssuredConfig;
+import management.selenium.rest_api.dto.CreatedUser;
+import management.selenium.rest_api.dto.UserDTO;
+import management.selenium.rest_api.pojo.UserData;
 import org.apache.http.HttpStatus;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -16,7 +17,6 @@ import java.net.URI;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.requestSpecification;
 
 public class ApiTest extends BaseApiTest {
 
@@ -28,10 +28,8 @@ public class ApiTest extends BaseApiTest {
 
         RequestSpecification request = given().when();
 
-        Response response = request.get(URI.create(PATH));
-        JsonPath jsonPath = response.body().jsonPath();
-
-        List<UserData> data = jsonPath.getList("data", UserData.class);
+        Response response = BaseRestAssuredConfig.sendGetRequestAndGetResponse(PATH);
+        List<UserData> data = BaseRestAssuredConfig.getObjectListFromApi(response, UserData.class, "data");
 
         data.forEach(d -> {
             String avatar = d.getAvatar();
@@ -50,7 +48,8 @@ public class ApiTest extends BaseApiTest {
         ResponseSpecification respSpec = new ResponseSpecBuilder().expectStatusCode(HttpStatus.SC_CREATED).build();
 
         UserDTO userForCreating = UserDTO.builder().name("TestName").job("TestJob").build();
-        respSpec = request.basePath(PATH).body(userForCreating).then().spec(respSpec);
+
+        request.basePath(PATH).body(userForCreating).then().spec(respSpec);
 
         Response response = request.post();
 

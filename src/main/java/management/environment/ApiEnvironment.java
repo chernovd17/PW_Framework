@@ -18,4 +18,8 @@ public class ApiEnvironment extends BaseEnv {
     public static String getURL() {
         return get().getProperty("url");
     }
+
+    public static int getRequestTimeout() {
+        return Integer.parseInt(get().getProperty("timeout_1_minute"));
+    }
 }
