@@ -52,6 +52,7 @@ public class SeleniumBrowserManager {
         options.addArguments("disable-popup-blocking");
         options.addArguments("−−lang=en-US");
         options.addArguments("--disable-translate");
+        options.addArguments("--disable-search-engine-choice-screen");
         Map<String, Object> prefs = new HashMap<>();
         prefs.put("intl.accept_languages", "en");
         options.setExperimentalOption("prefs", prefs);
