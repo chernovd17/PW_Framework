@@ -1,4 +1,4 @@
-package selenium.api;
+package api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

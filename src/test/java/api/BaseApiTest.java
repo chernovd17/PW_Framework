@@ -1,4 +1,4 @@
-package selenium.api;
+package api;
 
 import management.rest_api.BaseRestAssuredConfig;
 import org.testng.annotations.BeforeSuite;

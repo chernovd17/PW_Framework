@@ -1,4 +1,4 @@
-package selenium.api;
+package api;
 
 //import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.testng.annotations.Test;
