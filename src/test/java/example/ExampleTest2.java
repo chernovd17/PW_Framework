@@ -14,7 +14,7 @@ import java.time.Duration;
 
 public class ExampleTest2 extends BaseTest {
 
-    private static final String EXPECTED_VERSION = "v1.45.0";
+    private static final String EXPECTED_VERSION = "v1.45.1";
     @Test(testName = "Expected version verification", description = "Verify if Playwright version is as expected")
     public void test() {
 

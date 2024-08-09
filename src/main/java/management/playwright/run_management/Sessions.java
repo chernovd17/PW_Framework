@@ -47,6 +47,7 @@ public class Sessions {
     public synchronized static void killCurrentSession() {
         getCurrentSession().getLoggerSession().SYSTEM("Killing current session '" + getCurrentSession().getThreadId() + "'.");
         getCurrentSession().getBrowserManager().closeBrowser();
+        getCurrentSession().getBrowserManager().closeDriverOrPw();
         getCurrentSession().getLoggerSession().getTestInfo().setEndDateTime(LocalDateTime.now());
         sessions.remove(getCurrentSession());
     }

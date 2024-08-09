@@ -1,6 +1,5 @@
 package logger_and_report.withlog4j2;
 
-import helpers.FileSystemHelper;
 import logger_and_report.entities.SuiteInfo;
 import management.playwright.run_management.Sessions;
 import management.playwright.run_management.TestSession;

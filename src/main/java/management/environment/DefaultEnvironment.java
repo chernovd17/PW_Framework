@@ -33,6 +33,10 @@ public class DefaultEnvironment extends BaseEnv {
         return Duration.ofSeconds(Integer.parseInt(getProperty("timeouts.page")));
     }
 
+    public Duration getPopUpTimeout() {
+        return Duration.ofSeconds(Integer.parseInt(getProperty("timeouts.popUp")));
+    }
+
 
     public Duration getElementTimeout() {
         return Duration.ofSeconds(Integer.parseInt(getProperty("timeouts.element")));

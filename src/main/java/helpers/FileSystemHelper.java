@@ -32,7 +32,7 @@ public class FileSystemHelper {
 
         String path = createUniqueScreenshotFilePath();
 
-        File screenshotFile = new File(createUniqueScreenshotFilePath());
+        File screenshotFile = new File(path);
         try {
             Files.write(screenshotFile.toPath(), screenshot);
             return screenshotFile;

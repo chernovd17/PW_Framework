@@ -30,9 +30,13 @@ public class BrowserManager {
         initContext();
     }
 
-    public void closePlaywright(){
+    public void closeDriverOrPw(){
         if(playwright != null)
             playwright.close();
+    }
+
+    public synchronized void closeBrowser() {
+        browser.close();
     }
 
     public BrowserManager(BrowserType browserType, BrowserType.LaunchOptions options, List<Cookie> cookies) {
@@ -75,7 +79,7 @@ public class BrowserManager {
     public static BrowserManager createNew(String browserName, BrowserType.LaunchOptions launchOptions) {
 
         BrowserType browserType;
-        Playwright playwright = new PlaywrightSession().getPlaywright();
+        Playwright playwright = Playwright.create();
         switch (browserName.toLowerCase()) {
             case "chrome":
                 //browserType = PlaywrightSession.getInstance().getPlaywright().chromium();
@@ -87,10 +91,6 @@ public class BrowserManager {
         }
         return new BrowserManager(browserType, launchOptions, playwright);
 
-    }
-
-    public synchronized void closeBrowser() {
-        browser.close();
     }
 
     public Page closeLastTab(){
@@ -105,7 +105,7 @@ public class BrowserManager {
         return FileSystemHelper.createScreenshotFile(buffer);
     }
 
-    private TestLogger getLogger() {
+    public TestLogger getLogger() {
         return Sessions.getCurrentSession().getLoggerSession();
     }
 }

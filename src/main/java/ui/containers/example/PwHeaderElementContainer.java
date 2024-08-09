@@ -28,9 +28,8 @@ public class PwHeaderElementContainer extends BaseElementContainer {
     public GitHubRepositoryPage openGitHubRepository() {
 
         GitHubRepositoryPage gitHubRepositoryPage = new GitHubRepositoryPage(
-                this.getPage().getPwContext().waitForPage(
-                        () -> gitIcon.click()
-                )
+                this.getPage().getPwPage().context().waitForPage(
+                        () -> gitIcon.click())
         );
         gitHubRepositoryPage.waitForOpening();
         return gitHubRepositoryPage;
