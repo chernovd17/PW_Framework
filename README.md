@@ -35,6 +35,9 @@ if something goes wrong:
 ![image](https://github.com/user-attachments/assets/e64af7cf-cd7e-484d-b996-fa618becf7e1)
 ![image](https://github.com/user-attachments/assets/6da185ae-e3a3-44f9-8316-edc79aaaa6ee)
 
+## run test suites by Maven 
+"mvn clean install test -DsuiteXmlFile={suite}" (without extension ".xml")
+
 
 
 

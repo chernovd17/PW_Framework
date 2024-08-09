@@ -1,16 +1,16 @@
-package management.selenium.rest_api.dto;
+package management.rest_api.pojo;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class UserLoginDTO extends BasePojo {
+public class UserLoginPojo extends BasePojo {
 
     private String username;
     private String password;
 
-    public UserLoginDTO(String username, String password) {
+    public UserLoginPojo(String username, String password) {
         this.username = username;
         this.password = password;
     }

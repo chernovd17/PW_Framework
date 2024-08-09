@@ -1,7 +1,7 @@
-package management.selenium.rest_api;
+package management.rest_api;
 
 import io.restassured.http.Cookies;
-import management.selenium.rest_api.dto.UserLoginDTO;
+import management.rest_api.pojo.UserLoginPojo;
 
 public class ApiSession {
 
@@ -11,15 +11,15 @@ public class ApiSession {
     private static ApiSession instance;
     private Cookies cookies;
 
-    public static ApiSession getInstance(UserLoginDTO userLoginDTO, String uri) {
+    public static ApiSession getInstance(UserLoginPojo userLoginPojo, String uri) {
         if (instance == null) {
-            instance = new ApiSession(userLoginDTO, uri);
+            instance = new ApiSession(userLoginPojo, uri);
         }
         return instance;
     }
 
-    private ApiSession(UserLoginDTO userLoginDTO, String uri) {
-        cookies = AuthenticateService.getAuthenticateCookies(userLoginDTO, uri);
+    private ApiSession(UserLoginPojo userLoginPojo, String uri) {
+        cookies = AuthenticateService.getAuthenticateCookies(userLoginPojo, uri);
     }
 
     public Cookies getCookies() {

@@ -1,21 +1,21 @@
-package management.selenium.rest_api;
+package management.rest_api;
 
 
 import io.restassured.http.Cookies;
 import io.restassured.response.Response;
-import management.selenium.rest_api.dto.UserLoginDTO;
+import management.rest_api.pojo.UserLoginPojo;
 import management.selenium.sessions_management.SeleniumSessions;
 
 import static io.restassured.RestAssured.given;
 
 public class AuthenticateService extends BaseService {
 
-    public static Response authenticateUser(UserLoginDTO userLoginDTO, String uri) {
-        SeleniumSessions.getCurrentSession().getLoggerSession().ACTION("Authenticating as " + userLoginDTO + " user");
+    public static Response authenticateUser(UserLoginPojo userLoginPojo, String uri) {
+        SeleniumSessions.getCurrentSession().getLoggerSession().ACTION("Authenticating as " + userLoginPojo + " user");
         Response response = given()
                 .basePath(uri)
                 .when()
-                .body(userLoginDTO)
+                .body(userLoginPojo)
                 .post()
                 .then()
                 .extract()
@@ -24,8 +24,8 @@ public class AuthenticateService extends BaseService {
         return response;
     }
 
-    public static Cookies getAuthenticateCookies(UserLoginDTO userLoginDTO, String uri) {
-        return authenticateUser(userLoginDTO, uri)
+    public static Cookies getAuthenticateCookies(UserLoginPojo userLoginPojo, String uri) {
+        return authenticateUser(userLoginPojo, uri)
                 .getDetailedCookies();
     }
 }

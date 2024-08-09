@@ -1,4 +1,4 @@
-package base_tests.selenium;
+package selenium.ui;
 
 import helpers.FileSystemHelper;
 import logger_and_report.entities.SuiteInfo;

@@ -1,6 +1,6 @@
-package base_tests.selenium.api;
+package selenium.api;
 
-import management.selenium.rest_api.BaseRestAssuredConfig;
+import management.rest_api.BaseRestAssuredConfig;
 import org.testng.annotations.BeforeSuite;
 
 public class BaseApiTest {

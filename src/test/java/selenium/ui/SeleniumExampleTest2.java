@@ -1,4 +1,4 @@
-package base_tests.selenium;
+package selenium.ui;
 
 import management.selenium.sessions_management.SeleniumSessions;
 import management.selenium.web_context.containers.pop_ups.SignUpPopUp;

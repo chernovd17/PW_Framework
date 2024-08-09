@@ -37,7 +37,7 @@ public class CustomUIAppender extends AbstractAppender {
 
     @Override
     public synchronized void append(LogEvent event) {
-        SeleniumTestSession currentSession = SeleniumSessions.getCurrentSession();//TODO need to return TestSession currentSession = Sessions.getCurrentSession();
+        TestSession currentSession = Sessions.getCurrentSession();//TODO for selenium SeleniumTestSession currentSession = SeleniumSessions.getCurrentSession();
         if(currentSession != null)
             currentSession.getLoggerSession().addRow(event);
         else {

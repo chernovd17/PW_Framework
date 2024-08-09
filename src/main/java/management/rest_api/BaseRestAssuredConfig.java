@@ -1,4 +1,4 @@
-package management.selenium.rest_api;
+package management.rest_api;
 
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
@@ -6,15 +6,12 @@ import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.config.HttpClientConfig;
 import io.restassured.config.RestAssuredConfig;
 import io.restassured.http.ContentType;
-import io.restassured.http.Cookies;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import io.restassured.response.ResponseBody;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import management.environment.ApiEnvironment;
-import management.environment.DefaultEnvironment;
-import management.selenium.rest_api.dto.BasePojo;
+import management.rest_api.pojo.BasePojo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 
@@ -66,13 +63,14 @@ public class BaseRestAssuredConfig {
         return response;
     }
 
-    public static Response sendGetRequestAndGetResponse(String uri) {
+    public static Response sendGetRequest(String uri) {
         RequestSpecification requestSpecification = given()
-                .config(createTimeoutConfig())
-                .basePath(uri);
-        //        .cookies(cookies);
+                .config(createTimeoutConfig());
+                //.basePath(uri);
+                //.cookies(cookies);
+
         Response response = requestSpecification
-                .get()
+                .get(uri)
                 .then()
                 .extract()
                 .response();
@@ -92,11 +90,13 @@ public class BaseRestAssuredConfig {
     }
 
     private static String createFullJsonPath(String... paths) {
-        String fullPath = "Result";
+        String fullPath = "";
         if(paths != null && paths.length > 0)
             fullPath = fullPath + "." + StringUtils.join(paths, ".");
         return fullPath;
     }
+
+
 
     private static JsonPath getJsonPath(Response response) {
         var body = response.body();

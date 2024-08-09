@@ -1,4 +1,4 @@
-package base_tests.selenium;
+package selenium.ui;
 
 import management.selenium.helpers.Verification;
 import management.selenium.sessions_management.SeleniumSessions;
